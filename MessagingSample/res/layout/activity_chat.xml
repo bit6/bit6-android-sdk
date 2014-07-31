@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/dest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" 
+        android:textSize="20sp"/>
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/typing"
+        android:layout_below="@+id/dest" >
+    </ListView>
+
+    <TextView android:id="@+id/typing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="user is typing" 
+        android:layout_above="@+id/compose_area"
+        android:visibility="invisible"/>
+
+    <LinearLayout
+        android:id="@+id/compose_area"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/text"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.7"
+            android:inputType="textCapSentences|textAutoCorrect|textMultiLine|textShortMessage"
+            android:maxLines="4"
+            android:minHeight="48sp" />
+
+        <Button
+            android:id="@+id/send"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:minHeight="40dp"
+            android:minWidth="40dp"
+            android:text="send" />
+    </LinearLayout>
+
+</RelativeLayout>
