@@ -1,0 +1,7 @@
+---
+title: 'Bit6 Android SDK'
+exclude: ['README.markdown']
+permalink: ':title'
+highlighter: 'pygments'
+safe: false
+markdown: redcarpet
