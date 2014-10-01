@@ -1,7 +1,5 @@
 package com.bit6.samples.demo;
 
-import com.bit6.sdk.Message.Messages;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
@@ -9,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.bit6.sdk.Message.Messages;
 
 public class ChatsAdapter extends CursorAdapter{
 

@@ -26,9 +26,9 @@ import android.widget.TextView;
 
 import com.bit6.sdk.Bit6;
 import com.bit6.sdk.Message.Messages;
-import com.bit6.sdk.MessageListener;
+import com.bit6.sdk.RtNotificationListener;
 
-public class ChatsActivity extends Activity implements MessageListener {
+public class ChatsActivity extends Activity implements RtNotificationListener {
 
 	private TextView mLogout;
 	private Button mCompose;
@@ -56,7 +56,7 @@ public class ChatsActivity extends Activity implements MessageListener {
 
 		String message = getString(R.string.loged_in);
 		TextView tv = (TextView) findViewById(R.id.username);
-		tv.setText(message + " " + bit6.getOwnIdentity() + " ");
+		tv.setText(message + " " + bit6.getOwnIdentity().toString() + " ");
 
 		mListView = (ListView) findViewById(R.id.list);
 
@@ -111,7 +111,7 @@ public class ChatsActivity extends Activity implements MessageListener {
 			@Override
 			public void onClick(View v) {
 				String dest = mDest.getText().toString();
-				if (!TextUtils.isEmpty(dest)) {
+				if (!TextUtils.isEmpty(dest.trim())) {
 					Intent intent = new Intent(ChatsActivity.this,
 							ChatActivity.class);
 					intent.putExtra("dest", dest);
@@ -119,7 +119,7 @@ public class ChatsActivity extends Activity implements MessageListener {
 				}
 			}
 		});
-		bit6.addMessageListener(this);
+		bit6.addRtNotificationListener(this);
 
 	}
 
@@ -136,7 +136,7 @@ public class ChatsActivity extends Activity implements MessageListener {
 	protected void onDestroy() {
 		super.onDestroy();
 		mAdapter.unregisterDataSetObserver(mAdapterObserver);
-		bit6.removeMessageListener(this);
+		bit6.removeRtNotificationListener(this);
 	}
 
 	private void scrollToNewestItem() {

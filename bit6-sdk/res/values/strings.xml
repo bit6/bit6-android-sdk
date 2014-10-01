@@ -2,5 +2,17 @@
 <resources>
 
     <string name="error_net_connect">Unable to contact server</string>
+    <string name="upload_error_wrong_URL">Error occurs while uploading, wrong URL.</string>
+    <string name="upload_error_check_connection">Error occurs while uploading, please check internet connection.</string>
+    <string name="upload_error_out_of_memory">Error occurs while uploading, no enough memory on device.</string>
+    <string name="attachment_err_msg">Error occurs while uploading attachment</string>
+    <string name="video_was_not_taken">Video was not taken.</string>
+    <string name="enable_gps">Please, turn on Location access in the device settings</string>
+    <string name="hangup_call">Hangup</string>
+    <string name="camera">Camera</string>
+    <string name="mute">Mute</string>
+    <string name="unmute">Unmute</string>
+    <string name="incoming_video_call">Incoming Video Call</string>
+    <string name="incoming_voice_call">Incoming Voice Call</string>
 
 </resources>

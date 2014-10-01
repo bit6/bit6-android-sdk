@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.bit6.sdk.Address;
 import com.bit6.sdk.Bit6;
-import com.bit6.sdk.OnResponseReceived;
+import com.bit6.sdk.ResultCallback;
 
 public class MainActivity extends Activity implements OnItemSelectedListener {
 
@@ -61,7 +61,6 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 				this, R.array.env_array, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mSpinner.setAdapter(adapter);
-		mSpinner.setSelection(1, false);
 		mSpinner.setOnItemSelectedListener(this);
 	}
 
@@ -72,14 +71,17 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		if (TextUtils.isEmpty(username) || TextUtils.isEmpty(pass)) {
 			Toast.makeText(this, "Incorrect username/password",
 					Toast.LENGTH_LONG).show();
+		}else{
+			mLogin.setEnabled(false);
 		}
 
 		Address identity = Address.fromParts(Address.KIND_USERNAME, username);
-
-		bit6.login(identity, pass, new OnResponseReceived() {
-
+		
+		bit6.login(identity, pass, new ResultCallback() {
+			
 			@Override
-			public void onResponse(boolean success, String msg) {
+			public void onResult(boolean success, String msg) {
+				mLogin.setEnabled(true);
 				if (success) {
 					Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG)
 							.show();
@@ -96,9 +98,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 					Log.e("login.onFailure", msg);
 					Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG)
 							.show();
-				}
+				}				
 			}
-
 		});
 	}
 
@@ -109,14 +110,17 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 		if (TextUtils.isEmpty(username) || TextUtils.isEmpty(pass)) {
 			Toast.makeText(this, getString(R.string.incorrect_credentials),
 					Toast.LENGTH_LONG).show();
+		}else{
+			mSignup.setEnabled(false);
 		}
 
 		Address identity = Address.fromParts(Address.KIND_USERNAME, username);
-
-		bit6.signup(identity, pass, new OnResponseReceived() {
+		
+		bit6.signup(identity, pass, new ResultCallback() {
 
 			@Override
-			public void onResponse(boolean success, String msg) {
+			public void onResult(boolean success, String msg) {
+				mSignup.setEnabled(true);
 				if (success) {
 					Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG)
 							.show();
@@ -150,7 +154,10 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position,
 			long id) {
-		
+		Bit6.getInstance().destroy();
+		Bit6.getInstance().init(getApplicationContext(), App.API_KEY,
+				(App) getApplication(), App.SENDER_ID, position);
+
 	}
 
 	@Override
