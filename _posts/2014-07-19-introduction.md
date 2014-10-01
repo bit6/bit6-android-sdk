@@ -18,7 +18,7 @@ To see the sample app in action, you will need to create two users:
 
 * Download the MessagingSample demo app [here](https://github.com/bit6/bit6-android-sdk)
 * Import into Eclipse as an Android project
-* Right click on the project, add bit6-sdk as a library from Properties -> Android
+* Right click on the project, add `bit6-sdk` as a library from Properties -> Android
 * Run the MessagingSample app
 * Type a username and a password
 * Tap 'Sign up'

@@ -1,12 +1,17 @@
 ### Add Bit6 SDK to your Eclipse project
 
-1. [Download](https://github.com/bit6/bit6-android-sdk/) the Bit6 SDK.
+1. [Download](https://github.com/bit6/bit6-android-sdk/) the Bit6 SDK
 
-2. Add the Bit6 SDK to your application's libs folder.
+2. Import `bit6-sdk` project into Eclipse
 
-3. Add Bit6 as a library from properties -> Android, click OK.
+3. Add `bit6-sdk` as a library into your project:
+  - right click on your project 
+  - select Properties -> Android
+  - click 'Add...'
+  - choose bit6-sdk and click OK
 
-<img style="max-width:100%" src="images/project_properties.png"/>
+<img style="max-width:100%; " src="images/project_properties.png"/>
+
 
 ### Get a Bit6 API Key
 

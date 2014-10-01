@@ -7,8 +7,9 @@ Bit6 bit6 = Bit6.getInstance();
 
 Address identity = Address.fromParts(Address.KIND_USERNAME, username);
 
-bit6.signup(identity, pass, new OnResponseReceived() {
-	public void onResponse(boolean success, String msg) {
+bit6.signup(identity, pass, new ResultCallback() {
+	@Override
+	public void onResult(boolean success, String msg) {
 		if (success) {
 			Log.e("onResponse", "success "+msg);
 		} else {
@@ -25,8 +26,9 @@ Login into an existing account using an Identity and a password.
 ```java
 Address identity = Address.fromParts(Address.KIND_USERNAME, username);
 
-bit6.login(identity, pass, new OnResponseReceived() {
-	public void onResponse(boolean success, String msg) {
+bit6.login(identity, pass, new ResultCallback() {
+	@Override
+	public void onResult(boolean success, String msg) {
 		if (success) {
 			Log.e("onResponse", "success "+msg);
 		} else {
@@ -36,18 +38,20 @@ bit6.login(identity, pass, new OnResponseReceived() {
 });
 ```
 
+
 ### Logout
 
 ```java
 bit6.logout();
 ```
 
+
 ### Check if the user is logged in
 
 ```java
 if (bit6.isUserLoggedIn()) {
 	Log.e(TAG, "Logged in")
-}else{
+} else {
 	Log.e(TAG, "Not logged in")
 }
 ```
