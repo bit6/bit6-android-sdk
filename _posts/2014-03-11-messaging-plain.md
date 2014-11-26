@@ -35,7 +35,6 @@ public void onMessageStatusChanged(Message m, int state) {
 
 ```java
 bit6.deleteMessage(messageId, new ResultCallback() {
-
 	@Override
 	public void onResult(boolean success, String msg) {
 

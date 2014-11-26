@@ -1,3 +1,8 @@
+---
+title: 'Identities'
+layout: nil
+---
+
 A user can have multiple identities - username, email, facebook, google, phone number etc. Identities are required for the user authentication, working with contacts, identifying user's network. An identity is represented by a URI.
 
 ### Username

@@ -1,3 +1,8 @@
+---
+title: 'Authentication'
+layout: nil
+---
+
 ### Create user account
 
 Create a new user account with a username identity.
