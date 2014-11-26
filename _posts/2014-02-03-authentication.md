@@ -38,8 +38,8 @@ bit6.login(identity, pass, new ResultCallback() {
 			Log.e("onResponse", "success "+msg);
 		} else {
 			Log.e("onResponse", "fail "+msg);
-			}
 		}
+	}
 });
 ```
 
