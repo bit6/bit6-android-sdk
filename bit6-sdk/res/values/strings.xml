@@ -9,10 +9,10 @@
     <string name="video_was_not_taken">Video was not taken.</string>
     <string name="enable_gps">Please, turn on Location access in the device settings</string>
     <string name="hangup_call">Hangup</string>
-    <string name="camera">Camera</string>
     <string name="mute">Mute</string>
     <string name="unmute">Unmute</string>
     <string name="incoming_video_call">Incoming Video Call</string>
     <string name="incoming_voice_call">Incoming Voice Call</string>
+    <string name="switch_camera">Switch front/back camera</string>
 
 </resources>

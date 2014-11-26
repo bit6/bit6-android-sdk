@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bit6.samples.demo"
-    android:versionCode="2"
-    android:versionName="0.2.0" >
+    android:versionCode="6"
+    android:versionName="0.6.0" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -67,7 +67,7 @@
         <!-- Required for applications which use Google Play Services. -->
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_service_version" />
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name="com.bit6.samples.demo.MainActivity"
@@ -81,11 +81,12 @@
         </activity>
         <activity
             android:name="com.bit6.samples.demo.ChatsActivity"
-            >
+            android:configChanges="orientation|screenSize">
         </activity>
         <activity
             android:name="com.bit6.samples.demo.ChatActivity"
-            >
+            android:launchMode="singleTask"
+    		android:configChanges="orientation|keyboardHidden|screenSize">
         </activity>
         <activity
             android:name="com.bit6.samples.demo.PhotoViewActivity"
@@ -112,7 +113,7 @@
         
         <provider
             android:name="com.bit6.sdk.Bit6ContentProvider"
-            android:authorities="com.bit6.sdk.Bit6ContentProvider"
+            android:authorities="com.bit6.samples.demo"
             android:exported="false" />
 
         <!--
@@ -136,7 +137,7 @@
         
         <receiver android:name=".IncomingCallReceiver" android:enabled="true">
             <intent-filter>
-                <action android:name="com.bit6.intent.call"></action>
+                <action android:name="com.bit6.intent.INCOMING_CALL"></action>
             </intent-filter>
         </receiver>
 

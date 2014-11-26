@@ -9,14 +9,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.bit6.sdk.Bit6;
-import com.bit6.sdk.Call;
-import com.bit6.sdk.CallStateListener;
 import com.bit6.sdk.Ringer;
+import com.bit6.sdk.RtcDialog;
 import com.bit6.sdk.WakeLocker;
 
-public class IncomingCallActivity extends Activity implements CallStateListener {
+public class IncomingCallActivity extends Activity implements RtcDialog.StateListener, OnClickListener {
 
-	private Call call;
+	private RtcDialog dialog;
 	private Button answer, reject;
 	private Ringer ringer;
 	private Bit6 bit6;
@@ -35,15 +34,19 @@ public class IncomingCallActivity extends Activity implements CallStateListener 
 
 		ringer = new Ringer(this);
 		bit6 = Bit6.getInstance();
-		bit6.registerCallStateListener(this);
-		call = getIntent().getExtras().getParcelable("call");		
+
+		dialog = bit6.getDialogFromIntent(getIntent());
+
+		dialog.addStateListener(this);
+
 		TextView title = (TextView) findViewById(R.id.title);
-		title.setText(call.isVideo() ? R.string.incoming_video_call : R.string.incoming_voice_call);
+		title.setText(dialog.hasVideo() ? R.string.incoming_video_call : R.string.incoming_voice_call);
 
-		String dest = call.getSender();
+		String other = dialog.getOther();
 
-		String callerName = dest.toString().substring(
-				dest.toString().indexOf(":") + 1);
+		String callerName = other.toString().substring(
+				other.toString().indexOf(":") + 1);
+
 		String msg = String.format(getString(R.string.user_is_calling),
 				callerName);
 
@@ -53,39 +56,13 @@ public class IncomingCallActivity extends Activity implements CallStateListener 
 		answer = (Button) findViewById(R.id.answer);
 		reject = (Button) findViewById(R.id.reject);
 
-		answer.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				onAnswerClick();
-			}
-		});
-
-		reject.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				onRejectClick();
-			}
-		});
-	}
-
-	private void onAnswerClick() {
-		ringer.stop();
-		bit6.answerCall(call);
-		finish();
-	}
-
-	private void onRejectClick() {
-		ringer.stop();
-		bit6.rejectCall(call);
-		finish();
+		answer.setOnClickListener(this);
+		reject.setOnClickListener(this);
 	}
 
 	@Override
 	protected void onStart() {
-		super.onStart();
-		// TODO Maybe use bit6.acquireLocker(this) and bit.playRinging()?
+		super.onStart();		
 		WakeLocker.acquire(this);
 		ringer.playRinging();
 	}
@@ -99,18 +76,28 @@ public class IncomingCallActivity extends Activity implements CallStateListener 
 	
 	@Override
 	protected void onDestroy() {
-		bit6.unregisterCallStateListener();
+		dialog.removeStateListener(this);
 		super.onDestroy();
 	}
 
 	@Override
-	public void onCallEnded() {
-		finish();
+	public void onClick(View v) {
+		if (v == answer) {
+			ringer.stop();
+			dialog.launchInCallActivity(this);
+			finish();
+		}
+		else if (v == reject) {
+			ringer.stop();
+			dialog.hangup();
+			finish();
+		}
 	}
 
 	@Override
-	public void onCallFailed() {
-		// TODO Auto-generated method stub
-		
+	public void onStateChanged(RtcDialog d, int state) {
+		if (state == RtcDialog.END) {
+			finish();
+		}
 	}
 }

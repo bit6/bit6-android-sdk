@@ -30,5 +30,12 @@
     <string name="user_is_calling">%1$s is calling</string>
     <string name="incoming_voice_call">Incoming Voice Call</string>
     <string name="incoming_video_call">Incoming Video Call</string>
+    <string name="pstn_call">Call</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="phone_number_hint">+1 (xxx) xxx-xxxx </string>
+    <string name="pstn_dialog_message">Enter number starting with +1 for a short test call</string>
+    <string name="pstn_dialog_title">Test Calls to US and Canada</string>
+    <string name="invalid_phone_number">Invalid Phone Number</string>
 
 </resources>

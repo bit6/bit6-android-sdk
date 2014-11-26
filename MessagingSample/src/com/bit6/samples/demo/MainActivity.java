@@ -54,6 +54,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 				onSignUpClick();
 			}
 		});
+		// CrashManager.register(this, App.HOCKEY_APP_TOKEN);
 
 		mSpinner = (Spinner) findViewById(R.id.env_spinner);
 

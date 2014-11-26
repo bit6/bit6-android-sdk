@@ -41,14 +41,14 @@ import android.widget.Toast;
 
 import com.bit6.sdk.Address;
 import com.bit6.sdk.Bit6;
-import com.bit6.sdk.CallStateListener;
 import com.bit6.sdk.Message;
 import com.bit6.sdk.Message.Messages;
 import com.bit6.sdk.MessageStatusListener;
 import com.bit6.sdk.ResultCallback;
 import com.bit6.sdk.RtNotificationListener;
+import com.bit6.sdk.RtcDialog;
 
-public class ChatActivity extends Activity implements RtNotificationListener, CallStateListener, MessageStatusListener {
+public class ChatActivity extends Activity implements RtNotificationListener, MessageStatusListener {
 
 	private String dest;
 	private TextView mDest;
@@ -221,7 +221,7 @@ public class ChatActivity extends Activity implements RtNotificationListener, Ca
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.options_menu, menu);
+	    inflater.inflate(R.menu.conversation_options_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -229,10 +229,10 @@ public class ChatActivity extends Activity implements RtNotificationListener, Ca
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_video_call:
-			bit6.startCall(to, true);
+			startCall(true);
 			break;
 		case R.id.menu_voice_call:
-			bit6.startCall(to, false);
+			startCall(false);
 			break;
 		case R.id.menu_take_photo:
 			startPhotoCapture();
@@ -290,6 +290,11 @@ public class ChatActivity extends Activity implements RtNotificationListener, Ca
 		});
 		return super.onContextItemSelected(item);
 	}	
+	
+	private void startCall(boolean isVideo) {
+		RtcDialog d = bit6.startCall(to, isVideo);
+		d.launchInCallActivity(this);
+	}
 	
 	private void startPhotoCapture() {
 
@@ -487,19 +492,6 @@ public class ChatActivity extends Activity implements RtNotificationListener, Ca
 		//bit6.sendMessage(m, this);
 		bit6.sendMyCurrentLocation(to, this);
 	}
-
-
-	@Override
-	public void onCallEnded() {
-		
-	}
-
-
-	@Override
-	public void onCallFailed() {
-		Toast.makeText(ChatActivity.this, "Call failed", Toast.LENGTH_LONG).show();	
-	}
-
 
 	@Override
 	public void onResult(boolean success, String msg) {

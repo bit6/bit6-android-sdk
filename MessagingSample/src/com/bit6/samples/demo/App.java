@@ -12,8 +12,8 @@ public class App extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		
-		Bit6.getInstance().init(getApplicationContext(), API_KEY, this, SENDER_ID);
+		Bit6.getInstance().init(getApplicationContext(), API_KEY, this,
+				SENDER_ID);
 
 	}
 
