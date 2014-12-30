@@ -4,7 +4,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -208,13 +207,13 @@ public class ChatsActivity extends Activity implements RtNotificationListener {
 	}
 
 	@Override
-	public void onTyping(JSONObject json) {
-		Log.d("ChatsActivity.onTyping()", "" + json.toString());
+	public void onTyping(String from, String type, JSONObject data) {
+		Log.d("ChatsActivity.onTyping()", "" + data.toString());
 	}
 
 	@Override
-	public void onMessageUpdate(JSONObject json) {
-		Log.d("ChatsActivity.onMessageUpdate()", "" + json.toString());
+	public void onMessageUpdate(String from, String type, JSONObject data) {
+		Log.d("ChatsActivity.onMessageUpdate()", "" + data.toString());
 
 	}
 

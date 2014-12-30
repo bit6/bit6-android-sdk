@@ -253,8 +253,7 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
 	}
 
 	@Override
-	public void onTyping(JSONObject json) {
-		String from = json.optString("from");
+	public void onTyping(String from, String type, JSONObject data) {
 		if (dest.equalsIgnoreCase(from)) {
 			mTyping.setVisibility(View.VISIBLE);
 			new Handler().postDelayed(new Runnable() {
@@ -265,12 +264,12 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
 				}
 			}, 1000);
 		}
-		Log.d("ChatActivity.onTyping()", "" + json.toString());
+		Log.d("ChatActivity.onTyping()", "" + data.toString());
 	}
 
 	@Override
-	public void onMessageUpdate(JSONObject json) {
-		Log.d("ChatActivity.onMessageUpdate()", "" + json.toString());
+	public void onMessageUpdate(String from, String type, JSONObject data) {
+		Log.d("ChatActivity.onMessageUpdate()", "" + data.toString());
 	}
 
 	@Override
@@ -293,7 +292,15 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
 	
 	private void startCall(boolean isVideo) {
 		RtcDialog d = bit6.startCall(to, isVideo);
-		d.launchInCallActivity(this);
+
+		// Launch default InCall Activity
+		// d.launchInCallActivity(this);
+
+		// Launch custom InCall Activity
+		Intent intent = new Intent(this, CallActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		d.setAsIntentExtra(intent);
+		startActivity(intent);
 	}
 	
 	private void startPhotoCapture() {

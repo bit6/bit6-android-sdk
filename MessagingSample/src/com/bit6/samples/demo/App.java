@@ -1,19 +1,25 @@
 package com.bit6.samples.demo;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import com.bit6.sdk.Bit6;
+import com.bit6.sdk.LifecycleHelper;
 
 public class App extends Application {
 
-	public final static String SENDER_ID = "YOUR_SENDER_ID";
-	public final static String API_KEY = "YOUR_API_KEY";
+	public final static String PROD_API_KEY = "prod_api_key";
+	public final static String DEV_API_KEY = "dev_api_key";
 
-	@Override
 	public void onCreate() {
 		super.onCreate();
-		Bit6.getInstance().init(getApplicationContext(), API_KEY, this,
-				SENDER_ID);
+
+		SharedPreferences sPref = getSharedPreferences("env", MODE_PRIVATE);
+		String env = sPref.getString("env", null);
+		Bit6 bit6 = Bit6.getInstance();
+		bit6.init(getApplicationContext(), "dev".equals(env) ? DEV_API_KEY
+				: PROD_API_KEY);
+		registerActivityLifecycleCallbacks(new LifecycleHelper(bit6));
 
 	}
 

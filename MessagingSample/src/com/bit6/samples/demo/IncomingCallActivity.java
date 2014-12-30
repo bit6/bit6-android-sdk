@@ -1,6 +1,7 @@
 package com.bit6.samples.demo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -84,7 +85,15 @@ public class IncomingCallActivity extends Activity implements RtcDialog.StateLis
 	public void onClick(View v) {
 		if (v == answer) {
 			ringer.stop();
-			dialog.launchInCallActivity(this);
+			// Launch default InCall Activity
+			// dialog.launchInCallActivity(this);
+			
+			// Launch custom InCall Activity
+			Intent intent = new Intent(this, CallActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			dialog.setAsIntentExtra(intent);
+			startActivity(intent);
+
 			finish();
 		}
 		else if (v == reject) {
