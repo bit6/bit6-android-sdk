@@ -1,7 +1,10 @@
 ---
 title: 'Getting Started'
-layout: nil
 ---
+
+### Get Bit6 API Key
+You will need an API key to use the SDK. Get it [here](http://bit6.com/contact/).
+
 
 ### Add Bit6 SDK to your Eclipse project
 
@@ -18,10 +21,6 @@ layout: nil
 <img style="max-width:100%; " src="images/project_properties.png"/>
 
 
-### Get a Bit6 API Key
-
-You will need an API key in order to initialize and use Bit6 SDK. Send an email to dev@bit6.com to receive an application key.
-
 ### Setup Application class
 
 In your Application class
@@ -31,7 +30,7 @@ In your Application class
 **Step 2.** Add the following to `onCreate()` method:
 
 ```java
-Bit6.getInstance().init(getApplicationContext(), apikey, this, gcmSenderId);
+Bit6.getInstance().init(getApplicationContext(), apikey);
 ```
 
 ### Add to your Manifest.xml
@@ -40,6 +39,13 @@ Bit6.getInstance().init(getApplicationContext(), apikey, this, gcmSenderId);
 <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
 <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.WAKE_LOCK" />
+<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 <permission
     android:name="com.bit6.permission.C2D_MESSAGE"

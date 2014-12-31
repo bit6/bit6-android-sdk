@@ -1,8 +1,6 @@
 ---
 category: multimedia messaging
 title: 'Attachments'
-
-layout: nil
 ---
 
 ### Send a Message with Attachment

@@ -1,12 +1,11 @@
 ---
 category: calling
 title: 'Voice & Video Calls'
-layout: nil
 ---
 
-### Make Call
+### Default In-Call UI
 
-Register `InCallActivity` in Manifest.xml
+Register default `InCallActivity` in Manifest.xml. You can build custom In-Call UI as described in a [separate section](#calling-ui).
 
 ```java
 <activity android:name="com.bit6.sdk.ui.InCallActivity"
@@ -16,14 +15,19 @@ Register `InCallActivity` in Manifest.xml
 </activity> 
 ```
 
-To make a call to a destination:
+### Start an Outgoing Call
 
 ```java
+// Initiate a call
+Address to = Address.parse("usr:john");
 RtcDialog dialog = bit6.startCall(to, isVideo);
+// Launch the default InCall activity
 dialog.launchInCallActivity(this);
 ```  
 
-### Receive Call
+
+### Handle an Incoming Call
+
 **Step 1.** Register Broadcast Receiver for `com.bit6.intent.INCOMING_CALL` intent in your Manifest.xml
 
 ```java
@@ -43,17 +47,35 @@ public class IncomingCallReceiver extends BroadcastReceiver{
 	    Intent i = new Intent(context, IncomingCallActivity.class);
 	    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	    // Send Call information to the IncomingCallActivity
-	    i.putExtra(Bit6.INTENT_EXTRA_DIALOG, intent.getParcelableExtra(Bit6.INTENT_EXTRA_DIALOG));
+	    i.putExtra(Bit6.INTENT_EXTRA_DIALOG, 
+            intent.getParcelableExtra(Bit6.INTENT_EXTRA_DIALOG));
 	    context.startActivity(i);
 	}
 }
 ```
 
-**Step 3.** Get `RtcDalog` from intent in your activity
 
-Implement `RtcDialog.StateListener` to receive call state changes.
+**Step 3.** Implement `IncomingCallActivity`
 
+Get call controller and display UI for answering / rejecting a call
+
+```java
+// Get RtcDialog (call controller) for this call
+RtcDialog dialog = bit6.getDialogFromIntent(getIntent());
+dialog.addStateListener(this);
+
+// Get caller information
+String caller = dialog.getOther();
+// Is this a Video call
+boolean video = dialog.hasVideo();
+
+// Reject / hangup this call
+dialog.hangup();
 ```
+
+Implement `RtcDialog.StateListener` to receive call state changes - if the caller hangs up the call before the user had a chance to answer or reject it.
+
+```java
 @Override
 public void onStateChanged(RtcDialog d, int state) {
     if (state == RtcDialog.END) {
@@ -61,15 +83,13 @@ public void onStateChanged(RtcDialog d, int state) {
     }
 }
 
-RtcDialog dialog = bit6.getDialogFromIntent(getIntent());
-dialog.addStateListener(this);
-
 ```
 
-To get caller name call `dialog.getOther();`
 
-To check if it is video or voice call then call `dialog.hasVideo()`
+**Step 4.** Accept the call and show In-Call UI
 
-Call `dialog.launchInCallActivity(this);` to answer the call
+```java
+// Answer the call and launch the default In-Call Activity
+dialog.launchInCallActivity(this);
+```
 
-Call `dialog.hangup();` to reject the call

@@ -1,8 +1,6 @@
 ---
 category: basic messaging
 title: 'Presence'
-
-layout: nil
 ---
 
 

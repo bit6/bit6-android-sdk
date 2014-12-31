@@ -1,0 +1,78 @@
+---
+category: calling
+title: 'In-Call UI'
+---
+
+### Implement Custom UI
+
+Create `CallActivity` in your project and register it in `Manifest.xml`.
+
+In `onCreate()` set your content view and get `RtcDialog` instance from the intent.
+
+```java
+setContentView(R.layout.activity_call);
+RelativeLayout rootView = (RelativeLayout) findViewById(R.id.root);
+// Get RtcDialog (call controller) for this call
+RtcDialog dialog = bit6.getDialogFromIntent(getIntent());
+```
+
+Create `RtcMediaView` instance that will render local and remote video streams, and add it on your root view
+
+```java
+RtcMediaView mediaView = dialog.createVideoView(this);
+rootView.addView(mediaView);
+```
+
+Your root view may contain any other views like Button (disconnect, change scaling, switch camera), TextView (timer, destination name), etc...
+
+
+Set the preferred dimensions for remote and local video views.
+
+```java
+boolean scaleFit = true;
+mediaView.setRemotVideoViewParams(x, y, width, height, scaleFill);
+mediaView.setLocalVideoViewParams(x, y, width, height, !scaleFill);
+```
+
+### Call Controller
+
+```java
+// Switch camera in a video call
+mediaView.switchCamera();
+
+// Change video scaling
+boolean flag = true; // 'Fill' if true, 'Fit' if false
+mediaView.setScaleFill(flag);
+
+// Hangup this call
+dialog.hangup();
+```
+
+
+### Start an Outgoing Call
+
+```java
+// Initiate a call
+Address to = Address.parse("usr:john");
+RtcDialog dialog = bit6.startCall(to, isVideo);
+// Launch custom In-Call activity
+Intent intent = new Intent(this, CallActivity.class);
+intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+dialog.setAsIntentExtra(intent);
+startActivity(intent);
+```
+
+
+### Handle an Incoming Call
+
+Follow the Steps 1-3 described [above](#calling-voice-video) for the incoming calls. Then:
+
+**Step 4.** Accept the call and show In-Call UI
+
+```java
+// Launch custom In-Call Activity
+Intent intent = new Intent(this, CallActivity.class);
+intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+dialog.setAsIntentExtra(intent);
+startActivity(intent);
+```

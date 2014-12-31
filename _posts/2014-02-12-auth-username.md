@@ -1,11 +1,13 @@
 ---
-title: 'Authentication'
-layout: nil
+category: authentication
+title: 'Username'
 ---
+
+A username is case-insensitive and must consist of alphanumeric characters, e.g. `usr:john` or  `usr:test123`.
 
 ### Create user account
 
-Create a new user account with a username identity.
+Create a new user account with a username identity and a password.
 
 ```java
 Bit6 bit6 = Bit6.getInstance();
@@ -41,22 +43,4 @@ bit6.login(identity, pass, new ResultCallback() {
 		}
 	}
 });
-```
-
-
-### Logout
-
-```java
-bit6.logout();
-```
-
-
-### Check if the user is logged in
-
-```java
-if (bit6.isUserLoggedIn()) {
-	Log.e(TAG, "Logged in")
-} else {
-	Log.e(TAG, "Not logged in")
-}
 ```
