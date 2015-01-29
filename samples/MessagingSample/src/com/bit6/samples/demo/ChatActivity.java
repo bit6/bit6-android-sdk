@@ -253,7 +253,7 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
 	}
 
 	@Override
-	public void onTyping(String from, String type, JSONObject data) {
+	public void onTypingReceived(String from) {
 		if (dest.equalsIgnoreCase(from)) {
 			mTyping.setVisibility(View.VISIBLE);
 			new Handler().postDelayed(new Runnable() {
@@ -263,19 +263,8 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
 					mTyping.setVisibility(View.INVISIBLE);
 				}
 			}, 1000);
-		}
-		Log.d("ChatActivity.onTyping()", "" + data.toString());
-	}
-
-	@Override
-	public void onMessageUpdate(String from, String type, JSONObject data) {
-		Log.d("ChatActivity.onMessageUpdate()", "" + data.toString());
-	}
-
-	@Override
-	public void onNewMessage(JSONObject json) {
-		Log.d("ChatActivity.onNewMessage()", "" + json.toString());
-	}
+		}		
+	}	
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
@@ -512,6 +501,13 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
 			Toast.makeText(ChatActivity.this, "prepare", Toast.LENGTH_LONG)
 			.show();
 		}
+	}
+
+
+	@Override
+	public void onNotificationReceived(String from, String type, JSONObject data) {
+		// TODO Auto-generated method stub
+		
 	}	
 
 }

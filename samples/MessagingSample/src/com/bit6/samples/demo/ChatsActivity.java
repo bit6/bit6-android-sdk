@@ -1,20 +1,14 @@
 package com.bit6.samples.demo;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,10 +28,9 @@ import android.widget.Toast;
 
 import com.bit6.sdk.Bit6;
 import com.bit6.sdk.Message.Messages;
-import com.bit6.sdk.RtNotificationListener;
 import com.bit6.sdk.RtcDialog;
 
-public class ChatsActivity extends Activity implements RtNotificationListener {
+public class ChatsActivity extends Activity {
 
 	private TextView mLogout;
 	private Button mCompose;
@@ -47,7 +40,6 @@ public class ChatsActivity extends Activity implements RtNotificationListener {
 	private Cursor cursor;
 	private DataSetObserver mAdapterObserver;
 	private ChatsAdapter mAdapter;
-	private NotificationManager mNotificationManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +120,6 @@ public class ChatsActivity extends Activity implements RtNotificationListener {
 				}
 			}
 		});
-		bit6.addRtNotificationListener(this);
 
 	}
 
@@ -172,7 +163,8 @@ public class ChatsActivity extends Activity implements RtNotificationListener {
 			@Override
 			public void onClick(View v) {
 				String number = numberArea.getText().toString();
-				if (!TextUtils.isEmpty(number) && number.lastIndexOf('+') == 0 && number.length()>6 && number.length()<14) {
+				if (!TextUtils.isEmpty(number) && number.lastIndexOf('+') == 0
+						&& number.length() > 6 && number.length() < 14) {
 					RtcDialog d = bit6.startPhoneCall(number);
 					d.launchInCallActivity(ChatsActivity.this);
 					dialog.dismiss();
@@ -198,52 +190,11 @@ public class ChatsActivity extends Activity implements RtNotificationListener {
 	protected void onDestroy() {
 		super.onDestroy();
 		mAdapter.unregisterDataSetObserver(mAdapterObserver);
-		bit6.removeRtNotificationListener(this);
 	}
 
 	private void scrollToNewestItem() {
 		// Scroll to the start of list
 		mListView.setSelection(0);
-	}
-
-	@Override
-	public void onTyping(String from, String type, JSONObject data) {
-		Log.d("ChatsActivity.onTyping()", "" + data.toString());
-	}
-
-	@Override
-	public void onMessageUpdate(String from, String type, JSONObject data) {
-		Log.d("ChatsActivity.onMessageUpdate()", "" + data.toString());
-
-	}
-
-	@Override
-	public void onNewMessage(JSONObject json) {
-		Log.d("ChatsActivity.onNewMessage()", "" + json.toString());
-		String content = json.optString("content");
-		String sender = json.optString("sender");
-		sendNotification(content, sender);
-	}
-
-	private void sendNotification(String msg, String sender) {
-
-		mNotificationManager = (NotificationManager) this
-				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Intent intent = new Intent(this, ChatActivity.class);
-		intent.putExtra("dest", sender);
-
-		PendingIntent contentIntent = PendingIntent.getActivity(this,
-				msg.hashCode(), intent, 0);
-
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(
-				this).setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle(sender)
-				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-				.setContentText(msg);
-
-		builder.setContentIntent(contentIntent);
-		builder.setAutoCancel(true);
-		mNotificationManager.notify(1, builder.build());
 	}
 
 }

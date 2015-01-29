@@ -57,7 +57,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 			public void onClick(View v) {
 				onSignUpClick();
 			}
-		});		
+		});
+		// CrashManager.register(this, App.HOCKEY_APP_TOKEN);
 
 		mSpinner = (Spinner) findViewById(R.id.env_spinner);
 
@@ -92,7 +93,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 					// If login was successful than server returned user id
 					// and
 					// token, which are saved in preferences.
-					if (bit6.isUserLoggedIn()) {
+					if (bit6.isAuthenticated()) {
 						Intent intent = new Intent(MainActivity.this,
 								ChatsActivity.class);
 						startActivity(intent);
@@ -128,7 +129,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 				if (success) {
 					Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG)
 							.show();
-					if (bit6.isUserLoggedIn()) {
+					if (bit6.isAuthenticated()) {
 						Intent intent = new Intent(MainActivity.this,
 								ChatsActivity.class);
 						startActivity(intent);
@@ -148,7 +149,7 @@ public class MainActivity extends Activity implements OnItemSelectedListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (bit6.isUserLoggedIn()) {
+		if (bit6.isAuthenticated()) {
 			Intent intent = new Intent(MainActivity.this, ChatsActivity.class);
 			startActivity(intent);
 			finish();
