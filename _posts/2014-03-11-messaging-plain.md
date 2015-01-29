@@ -1,5 +1,5 @@
 ---
-category: basic messaging
+category: messaging
 title: 'Text Messages'
 ---
 
@@ -51,5 +51,30 @@ Cursor cursor = bit6.getConversations();
 
 ```java
 Cursor cursor = bit6.getConversation(destination);
+```
+
+### Handle broadcast intent when new message arrives
+**Step 1.** Register Broadcast Receiver for `your.package.name.intent.INCOMING_MESSAGE` intent in your Manifest.xml
+
+```java
+<receiver android:name=".IncomingMessageReceiver" android:enabled="true">
+    <intent-filter>
+        <action android:name="your.package.name.intent.INCOMING_MESSAGE"></action>
+    </intent-filter>
+</receiver>
+```
+
+**Step 2.** Create a receiver class which extends BroadcastReceiver.
+
+```java
+public class IncomingMessageReceiver extends BroadcastReceiver{
+	@Override
+	public void onReceive(Context context, Intent intent) {
+	    if(intent.getExtras() != null){
+			String content = intent.getExtras().getString("content");
+			String senderName = intent.getExtras().getString("senderName");
+		}
+	}
+}
 ```
 

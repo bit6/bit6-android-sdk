@@ -1,12 +1,12 @@
 ---
-category: basic messaging
-title: 'Presence'
+category: messaging
+title: 'Notifications'
 ---
 
 
 ### Real-Time Notifications
 
-Get notifications when a message status changes (for example, to delivered), a new message has been received, or another user is typing a message to you.
+Get notifications when a message status changes (for example, to delivered), a new notification has been received, or another user is typing a message to you.
 
 **Step 1.** `Implement RtNotificationListener`
 
@@ -16,16 +16,12 @@ Get notifications when a message status changes (for example, to delivered), a n
 ```java
 bit6.addRtNotificationListener(new RtNotificationListener() {
 
-    public void onTyping(JSONObject json) {
-        Log.e("onTyping()", "" + json.toString());
+    public void onTypingReceived(String from) {
+        Log.e("onTypingReceived()", from);
     }
-
-    public void onMessageUpdate(JSONObject json) {
-        Log.e("onMessageUpdate()", "" + json.toString());
-    }
-
-    public void onNewMessage(JSONObject json) {
-        Log.e("onNewMessage()", "" + json.toString());      
+    
+    public void onNotificationReceived(String from, String type, JSONObject data) {
+        Log.e("onNotificationReceived()", "" + data.toString());      
     }
 })
 ```
@@ -35,4 +31,10 @@ bit6.addRtNotificationListener(new RtNotificationListener() {
 ```java
 String destination = "usr:john"
 bit6.sendTypingNotification(Address.parse(destination));
+```
+
+### Send Custom Notification
+```java
+String destination = "usr:john"
+bit6.sendNotification(Address.parse(destination), "type");
 ```

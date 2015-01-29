@@ -1,6 +1,6 @@
 ---
 category: authentication
-title: 'Overview'
+title: 'Session'
 ---
 
 Each user in the system has one or more identities - user id, username, email, facebook id, google account, phone number etc. Identities are required for user authentication, managing contacts, identifying user's network. An identity is represented by a URI.
@@ -8,13 +8,13 @@ Each user in the system has one or more identities - user id, username, email, f
 Bit6 supports various authentication mechanisms described in the following sections. 
 
 
-### Check if the user is logged in
+### Check if the user is authenticated
 
 ```java
-if (bit6.isUserLoggedIn()) {
-	Log.e(TAG, "Logged in")
+if (bit6.isAuthenticated()) {
+	Log.e(TAG, "Authenticated")
 } else {
-	Log.e(TAG, "Not logged in")
+	Log.e(TAG, "Not Authenticated ")
 }
 ```
 

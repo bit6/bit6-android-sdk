@@ -3,37 +3,48 @@ title: 'Getting Started'
 ---
 
 ### Get Bit6 API Key
-You will need an API key to use the SDK. Get it [here](http://bit6.com/contact/).
+Get API key [here](http://bit6.com/contact/).
 
 
 ### Add Bit6 SDK to your Eclipse project
 
-1. [Download](https://github.com/bit6/bit6-android-sdk/) the Bit6 SDK
+__Step 1.__ [Download](https://github.com/bit6/bit6-android-sdk/) the Bit6 SDK
 
-2. Import `bit6-sdk` project into Eclipse
+__Step 2.__ Import `bit6-sdk` project into Eclipse
 
-3. Add `bit6-sdk` as a library into your project:
-  - right click on your project 
-  - select Properties -> Android
-  - click 'Add...'
-  - choose bit6-sdk and click OK
+__Step 3.__ Add `bit6-sdk` as a library into your project:
+
+  * right click on your project
+  * select Properties -> Android
+  * click 'Add...'
+  * select bit6-sdk and click OK
 
 <img style="max-width:100%; " src="images/project_properties.png"/>
 
 
 ### Setup Application class
 
-In your Application class
-
-**Step 1.** Import Bit6: `import com.bit6.sdk.Bit6;`
-
-**Step 2.** Add the following to `onCreate()` method:
-
 ```java
-Bit6.getInstance().init(getApplicationContext(), apikey);
+import com.bit6.sdk.Bit6;
+import com.bit6.sdk.LifecycleHelper;
+
+public class App extends Application {
+  // Override onCreate method to init the SDK
+  public void onCreate() {
+    super.onCreate();
+    // Initialize Bit6 SDK
+    Bit6 bit6 = Bit6.getInstance();
+    bit6.init(getApplicationContext(), "MY_API_KEY");
+    // Bit6 will be notified about lifecycle events for app activities
+    registerActivityLifecycleCallbacks(new LifecycleHelper(bit6));
+  }
+}
+
 ```
 
-### Add to your Manifest.xml
+### Manifest.xml
+
+Specify the required permissions.
 
 ```xml
 <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -42,6 +53,7 @@ Bit6.getInstance().init(getApplicationContext(), apikey);
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.WAKE_LOCK" />
 <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+<uses-permission android:name="android.permission.VIBRATE" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -57,7 +69,7 @@ Bit6.getInstance().init(getApplicationContext(), apikey);
 <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
 ```
-Add into the `<application>` element:
+Modify `<application>` element. `your.package.name` is the package name for your application.
 
 ```xml
 <application>
@@ -80,7 +92,21 @@ Add into the `<application>` element:
           <category android:name="com.bit6" />
       </intent-filter>
   </receiver>
+
+  <receiver android:name=".IncomingCallReceiver" android:enabled="true">
+      <intent-filter>
+          <action android:name="your.package.name.intent.INCOMING_CALL"></action>
+      </intent-filter>
+  </receiver>
+
+  <receiver android:name=".IncomingMessageReceiver" android:enabled="true">
+      <intent-filter>
+          <action android:name="your.package.name.intent.INCOMING_MESSAGE"></action>
+      </intent-filter>
+  </receiver>
+
   <service android:name="com.bit6.sdk.gcm.GcmIntentService" />
+
 </application>
 ```
 

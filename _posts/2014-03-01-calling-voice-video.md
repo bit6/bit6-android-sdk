@@ -28,12 +28,12 @@ dialog.launchInCallActivity(this);
 
 ### Handle an Incoming Call
 
-**Step 1.** Register Broadcast Receiver for `com.bit6.intent.INCOMING_CALL` intent in your Manifest.xml
+**Step 1.** Register Broadcast Receiver for `your.package.name.intent.INCOMING_CALL` intent in your Manifest.xml
 
 ```java
 <receiver android:name=".IncomingCallReceiver" android:enabled="true">
     <intent-filter>
-        <action android:name="com.bit6.intent.INCOMING_CALL"></action>
+        <action android:name="your.package.name.intent.INCOMING_CALL"></action>
     </intent-filter>
 </receiver>
 ```
