@@ -3,7 +3,7 @@ title: 'Getting Started'
 ---
 
 ### Get Bit6 API Key
-Get API key [here](http://bit6.com/contact/).
+Go to [Dashboard](https://dashboard.bit6.com/) and get the API Key for your app.
 
 
 ### Add Bit6 SDK to your Eclipse project
@@ -19,7 +19,7 @@ __Step 3.__ Add `bit6-sdk` as a library into your project:
   * click 'Add...'
   * select bit6-sdk and click OK
 
-<img style="max-width:100%; " src="images/project_properties.png"/>
+<img class="shot" src="images/project_properties.png"/>
 
 
 ### Setup Application class
