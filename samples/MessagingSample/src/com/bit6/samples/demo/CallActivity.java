@@ -14,7 +14,7 @@ import com.bit6.sdk.RtcDialog;
 import com.bit6.sdk.RtcDialog.StateListener;
 import com.bit6.sdk.ui.RtcMediaView;
 
-public class CallActivity extends Activity implements StateListener{
+public class CallActivity extends Activity implements StateListener {
 
 	private Bit6 bit6;
 	private RelativeLayout rootView;
@@ -73,7 +73,7 @@ public class CallActivity extends Activity implements StateListener{
 				});
 
 		ImageButton switchCameraButton = (ImageButton) findViewById(R.id.button_switch_camera);
-		if(!dialog.hasVideo()){
+		if (!dialog.hasVideo()) {
 			switchCameraButton.setVisibility(View.GONE);
 			videoScalingButton.setVisibility(View.GONE);
 		}
@@ -93,12 +93,12 @@ public class CallActivity extends Activity implements StateListener{
 			return inflater.inflate(R.layout.fr_menubar, container, false);
 		}
 	}
-	
+
 	@Override
 	public void onStateChanged(RtcDialog d, int state) {
-	    if (state == RtcDialog.END) {
-	        finish();
-	    }
+		if (state == RtcDialog.END) {
+			finish();
+		}
 	}
-	
+
 }

@@ -2,7 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              tools:context="org.appspot.apprtc.AppRTCDemoActivity$MenuBarFragment"
+              tools:context="com.bit6.sdk.ui.InCallActivity$MenuBarFragment"
               android:id="@+id/menubar"
               android:orientation="horizontal"
               android:layout_width="wrap_content"

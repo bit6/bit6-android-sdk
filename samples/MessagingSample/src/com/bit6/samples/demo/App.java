@@ -6,7 +6,8 @@ import android.content.SharedPreferences;
 import com.bit6.sdk.Bit6;
 import com.bit6.sdk.LifecycleHelper;
 
-public class App extends Application {	
+public class App extends Application {
+	
 	
 	public final static String PROD_API_KEY = "your_api_key";
 	public final static String DEV_API_KEY = "your_api_key";

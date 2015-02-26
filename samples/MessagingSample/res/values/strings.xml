@@ -37,5 +37,6 @@
     <string name="pstn_dialog_message">Enter number starting with +1 for a short test call</string>
     <string name="pstn_dialog_title">Test Calls to US and Canada</string>
     <string name="invalid_phone_number">Invalid Phone Number</string>
+    <string name="missed_call">Missed Call</string>
 
 </resources>
