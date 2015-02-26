@@ -48,7 +48,7 @@ public class IncomingCallReceiver extends BroadcastReceiver{
 	    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	    // Send Call information to the IncomingCallActivity
 	    i.putExtra(Bit6.INTENT_EXTRA_DIALOG, 
-            intent.getParcelableExtra(Bit6.INTENT_EXTRA_DIALOG));
+            intent.getBundleExtra(Bit6.INTENT_EXTRA_DIALOG));
 	    context.startActivity(i);
 	}
 }
