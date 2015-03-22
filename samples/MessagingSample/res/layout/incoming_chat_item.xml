@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="vertical"
-    android:padding="10dp" >
+    android:padding="10dp"
+    android:background="@color/light_gray" >
 
     <TextView
         android:id="@+id/content"
@@ -31,8 +32,8 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="left"
-            android:visibility="gone"
-            android:src="@drawable/ic_action_play_over_video" />
+            android:src="@drawable/ic_action_play_over_video"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout

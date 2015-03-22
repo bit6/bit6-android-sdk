@@ -19,9 +19,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="20dp"
-        android:textColor="#A4A4A4"
-        android:textSize="15sp"
         android:ellipsize="marquee"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:textColor="#A4A4A4"
+        android:textSize="15sp" />
 
 </LinearLayout>

@@ -4,19 +4,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView 
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center" android:textSize="20sp"
-        android:text="@string/pstn_dialog_message" 
-        android:layout_marginBottom="15dp"/>
-
-    <EditText android:id="@+id/number_area"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
         android:gravity="center"
-        android:hint="@string/phone_number_hint" 
-        android:inputType="phone"
-        android:digits="+0123456789"/>
+        android:text="@string/pstn_dialog_message"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:digits="+0123456789"
+        android:gravity="center"
+        android:hint="@string/phone_number_hint"
+        android:inputType="phone" />
 
 </LinearLayout>

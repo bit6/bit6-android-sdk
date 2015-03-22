@@ -1,52 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bit6.samples.demo"
-    android:versionCode="8"
-    android:versionName="0.8.5" >
+    android:versionCode="9"
+    android:versionName="0.8.6" >
 
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="21" />
 
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- Internet access - Allows applications to connect to the network -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.USE_SIP" />
-    <uses-permission android:name="android.permission.CONFIGURE_SIP" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- <uses-permission android:name="android.permission.WRITE_CONTACTS" /> -->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <!-- <uses-permission android:name="android.permission.READ_LOGS" /> -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Incoming call handling - Allows to keep the phone from sleeping or screen from dimming -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Incoming call handling - Access to the vibration effects -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Voice/Video calling - Allows an application to record audio -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- Voice/Video calling - Allows an application to modify global audio settings -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <!-- Voice/Video calling, photo/video messages - To access camera services -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <!-- Photo/Video messages - Allows an application to read from external storage. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Location messages - To access location services -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!-- <uses-permission android:name="android.permission.WRITE_CALL_LOG" /> -->
-
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <!--
      Creates a custom permission so only this app can receive its messages.
 
      NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE,
-           where PACKAGE is the application's package name.
+           where PACKAGE is the application's package name.
     -->
     <permission
         android:name="com.bit6.permission.C2D_MESSAGE"
@@ -71,34 +56,30 @@
 
         <activity
             android:name="com.bit6.samples.demo.MainActivity"
-            android:label="@string/app_name"
-            >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.bit6.samples.demo.ChatsActivity"
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize" >
         </activity>
         <activity
             android:name="com.bit6.samples.demo.ChatActivity"
-            android:launchMode="singleTask"
-    		android:configChanges="orientation|keyboardHidden|screenSize">
-        </activity>
-        <activity
-            android:name="com.bit6.samples.demo.PhotoViewActivity"
-            >
-        </activity>
-        <activity
-            android:name="com.bit6.samples.demo.VideoViewActivity"
-            >
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTop" >
         </activity>
         <activity
             android:name="com.bit6.samples.demo.IncomingCallActivity"
             android:launchMode="singleTop" >
+        </activity>
+        <activity
+            android:name="com.bit6.samples.demo.CallActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <activity
             android:name="com.bit6.sdk.ui.InCallActivity"
@@ -106,17 +87,7 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
-            
-        <activity android:name="com.bit6.samples.demo.CallActivity"
-              android:label="@string/app_name"
-              android:configChanges="orientation|screenSize"
-              android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
-            </activity>
 
-<!-- 
-              android:screenOrientation="fullUser"
- -->
-        
         <provider
             android:name="com.bit6.sdk.Bit6ContentProvider"
             android:authorities="com.bit6.samples.demo"
@@ -125,30 +96,32 @@
         <!--
           WakefulBroadcastReceiver that will receive intents from GCM
           services and hand them to the custom IntentService.
-
           The com.google.android.c2dm.permission.SEND permission is necessary
-          so only GCM services can send data messages for the app.
+          so only GCM services can send data messages for the app.
         -->
         <receiver
             android:name="com.bit6.sdk.gcm.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
-
                 <!-- Receives the actual messages. -->
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
                 <category android:name="com.bit6" />
             </intent-filter>
         </receiver>
-        
-        <receiver android:name=".IncomingCallReceiver" android:enabled="true">
+        <receiver
+            android:name=".IncomingCallReceiver"
+            android:enabled="true" >
             <intent-filter>
-                <action android:name="com.bit6.samples.demo.intent.INCOMING_CALL"></action>
+                <action android:name="com.bit6.samples.demo.BIT6_INCOMING_CALL" >
+                </action>
             </intent-filter>
         </receiver>
-         <receiver android:name=".IncomingMessageReceiver" android:enabled="true">
+        <receiver
+            android:name=".IncomingMessageReceiver"
+            android:enabled="true" >
             <intent-filter>
-                <action android:name="com.bit6.samples.demo.intent.INCOMING_MESSAGE"></action>
+                <action android:name="com.bit6.samples.demo.BIT6_INCOMING_MESSAGE" >
+                </action>
             </intent-filter>
         </receiver>
 

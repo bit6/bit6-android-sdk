@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical|center_horizontal"
     android:orientation="horizontal"
-    tools:context="com.bit6.sdk.ui.InCallActivity$MenuBarFragment" >
+    tools:context="com.bit6.samples.demo.CallActivity$MenuBarFragment" >
 
     <ImageButton
         android:id="@+id/button_disconnect"

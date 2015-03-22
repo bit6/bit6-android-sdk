@@ -10,7 +10,7 @@
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
     <string name="sign_up_confirm">Confirm Password</string>
-    <string name="loged_in">Logged in as </string>
+    <string name="logged_in">Logged in as %1$s</string>
     <string name="logout"> Logout</string>
     <string name="compose">Compose</string>
     <string name="delete_message">Delete Message</string>

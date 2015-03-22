@@ -1,3 +1,4 @@
+
 package com.bit6.samples.demo;
 
 import android.app.Activity;
@@ -21,156 +22,160 @@ import com.bit6.sdk.Address;
 import com.bit6.sdk.Bit6;
 import com.bit6.sdk.ResultCallback;
 
-public class MainActivity extends Activity implements OnItemSelectedListener {
+public class MainActivity extends Activity implements OnClickListener, OnItemSelectedListener {
 
-	private EditText mUsername;
-	private EditText mPassword;
-	private Button mLogin;
-	private Button mSignup;
-	private Spinner mSpinner;
-	private Bit6 bit6;
-	SharedPreferences sPref;
+    private Bit6 bit6;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		sPref= getSharedPreferences("env", MODE_PRIVATE);
+    private EditText mUsername;
+    private EditText mPassword;
+    private Button mLogin;
+    private Button mSignup;
 
-		bit6 = Bit6.getInstance();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-		mUsername = (EditText) findViewById(R.id.username);
-		mPassword = (EditText) findViewById(R.id.password);
-		mLogin = (Button) findViewById(R.id.login);
-		mLogin.setOnClickListener(new OnClickListener() {
+        bit6 = Bit6.getInstance();
 
-			@Override
-			public void onClick(View v) {
-				onLoginClick();
-			}
-		});
+        // User credentials
+        mUsername = (EditText) findViewById(R.id.username);
+        mPassword = (EditText) findViewById(R.id.password);
 
-		mSignup = (Button) findViewById(R.id.sign_up);
-		mSignup.setOnClickListener(new OnClickListener() {
+        // Login
+        mLogin = (Button) findViewById(R.id.login);
+        mLogin.setOnClickListener(this);
 
-			@Override
-			public void onClick(View v) {
-				onSignUpClick();
-			}
-		});
-		// CrashManager.register(this, App.HOCKEY_APP_TOKEN);
+        // Signup
+        mSignup = (Button) findViewById(R.id.signup);
+        mSignup.setOnClickListener(this);
 
-		mSpinner = (Spinner) findViewById(R.id.env_spinner);
+        // Environment selection
+        // Useful only for testing
+        Spinner spinner = (Spinner) findViewById(R.id.env_spinner);
 
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				this, R.array.env_array, android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mSpinner.setAdapter(adapter);
-		mSpinner.setOnItemSelectedListener(this);
-	}
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.env_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        int env = getBit6Environment();
+        spinner.setSelection(env == Bit6.PRODUCTION ? 0 : 1);
+        spinner.setOnItemSelectedListener(this);
 
-	private void onLoginClick() {
-		String username = mUsername.getText().toString();
-		String pass = mPassword.getText().toString();
+        // CrashManager.register(this, App.HOCKEY_APP_TOKEN);
+    }
 
-		if (TextUtils.isEmpty(username) || TextUtils.isEmpty(pass)) {
-			Toast.makeText(this, "Incorrect username/password",
-					Toast.LENGTH_LONG).show();
-		}else{
-			mLogin.setEnabled(false);
-		}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // If user auth'ed - go to Chats
+        doneIfAuthenticated();
+    }
 
-		Address identity = Address.fromParts(Address.KIND_USERNAME, username);
-		
-		bit6.login(identity, pass, new ResultCallback() {
-			
-			@Override
-			public void onResult(boolean success, String msg) {
-				mLogin.setEnabled(true);
-				if (success) {
-					Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG)
-							.show();
-					// If login was successful than server returned user id
-					// and
-					// token, which are saved in preferences.
-					if (bit6.isAuthenticated()) {
-						Intent intent = new Intent(MainActivity.this,
-								ChatsActivity.class);
-						startActivity(intent);
-						finish();
-					}
-				} else {
-					Log.e("login.onFailure", msg);
-					Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG)
-							.show();
-				}				
-			}
-		});
-	}
+    // If user is authenticated - go to ChatsActivity
+    private boolean doneIfAuthenticated() {
+        // Is the user authenticated?
+        boolean flag = bit6.isAuthenticated();
+        if (flag) {
+            // Go the Chats activity
+            Intent intent = new Intent(MainActivity.this, ChatsActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        return flag;
+    }
 
-	private void onSignUpClick() {
-		String username = mUsername.getText().toString();
-		String pass = mPassword.getText().toString();
+    // Handle the authentication result (from login or signup calls)
+    private ResultCallback mAuthResultCallback = new ResultCallback() {
 
-		if (TextUtils.isEmpty(username) || TextUtils.isEmpty(pass)) {
-			Toast.makeText(this, getString(R.string.incorrect_credentials),
-					Toast.LENGTH_LONG).show();
-		}else{
-			mSignup.setEnabled(false);
-		}
+        @Override
+        public void onResult(boolean success, String msg) {
+            mLogin.setEnabled(true);
+            mSignup.setEnabled(true);
+            if (success) {
+                if (doneIfAuthenticated()) {
+                    // Do not show anything in the toast
+                    msg = null;
+                }
+            } else {
+                Log.e("auth.onFailure", msg);
+            }
+            if (msg != null) {
+                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();                    
+            }
+        }
+    };
+    
+    @Override
+    public void onClick(View v) {
+        // Signup or Login clicked
 
-		Address identity = Address.fromParts(Address.KIND_USERNAME, username);
-		
-		bit6.signup(identity, pass, new ResultCallback() {
+        String username = mUsername.getText().toString().trim();
+        String pass = mPassword.getText().toString().trim();
 
-			@Override
-			public void onResult(boolean success, String msg) {
-				mSignup.setEnabled(true);
-				if (success) {
-					Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG)
-							.show();
-					if (bit6.isAuthenticated()) {
-						Intent intent = new Intent(MainActivity.this,
-								ChatsActivity.class);
-						startActivity(intent);
-						finish();
-					}
-				} else {
-					Log.e("signup.onFailure", msg);
-					Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG)
-							.show();
-				}
-			}
+        // Invalid username or password
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(pass)) {
+            Toast.makeText(this, getString(R.string.incorrect_credentials), Toast.LENGTH_LONG).show();
+            return;
+        }
 
-		});
+        // Disable login/signup button
+        mLogin.setEnabled(false);
+        mSignup.setEnabled(false);
 
-	}
+        // User identity - we assume username kind
+        Address identity = Address.fromParts(Address.KIND_USERNAME, username);
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (bit6.isAuthenticated()) {
-			Intent intent = new Intent(MainActivity.this, ChatsActivity.class);
-			startActivity(intent);
-			finish();
-		}
-	}
+        // Signup
+        if (v == mSignup) {
+            bit6.signup(identity, pass, mAuthResultCallback);
+        }
+        // Login
+        else {
+            bit6.login(identity, pass, mAuthResultCallback);            
+        }
+    }
 
-	@Override
-	public void onItemSelected(AdapterView<?> parent, View view, int position,
-			long id) {
-		Bit6.getInstance().destroy();
-		Bit6.getInstance().init(getApplicationContext(), position == 0 ?  App.PROD_API_KEY : App.DEV_API_KEY,
-				position);
 
-		
-		Editor ed = sPref.edit();
-		ed.putString("env", position == 0 ? "prod" : "dev");
-	    ed.commit();
-	}
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // Environment selection
+        boolean isProd = position == 0;
+        int env = isProd ? Bit6.PRODUCTION : Bit6.DEVELOPMENT;
+        setBit6Environment(env);
+    }
 
-	@Override
-	public void onNothingSelected(AdapterView<?> parent) {
-	}
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+    }
 
+    // Change environment and apikey for Bit6.
+    // Useful only in this demo for testing purposes only.
+    private void setBit6Environment(int env) {
+        // Existing environment
+        int oldEnv = getBit6Environment();
+
+        // Nothing to change
+        if (env == oldEnv) return;
+
+        // Destroy current instance of Bit6
+        bit6.destroy();
+
+        // Save environment value
+        SharedPreferences pref = getSharedPreferences(App.PREF_NAME, MODE_PRIVATE);
+        Editor ed = pref.edit();
+        ed.putInt(App.PREF_ENV_ID, env);
+        ed.commit();
+
+        // Pretty much the same code as in the App class
+        String apikey = env == Bit6.PRODUCTION ? App.PROD_API_KEY : App.DEV_API_KEY;
+        // Re-initialized Bit6 in the new environment
+        bit6.init(getApplicationContext(), apikey, env);        
+    }
+
+    private int getBit6Environment() {
+        SharedPreferences pref = getSharedPreferences(App.PREF_NAME, MODE_PRIVATE);
+        int oldEnv = pref.getInt(App.PREF_ENV_ID, Bit6.PRODUCTION);
+        return oldEnv;
+    }
 }

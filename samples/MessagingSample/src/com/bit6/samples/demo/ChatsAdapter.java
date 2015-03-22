@@ -1,3 +1,4 @@
+
 package com.bit6.samples.demo;
 
 import android.content.Context;
@@ -10,37 +11,40 @@ import android.widget.TextView;
 
 import com.bit6.sdk.Message.Messages;
 
-public class ChatsAdapter extends CursorAdapter{
+public class ChatsAdapter extends CursorAdapter {
 
-	public ChatsAdapter(Context context, Cursor c, boolean autoRequery) {
-		super(context, c, autoRequery);
-	}
+    public ChatsAdapter(Context context, Cursor c, boolean autoRequery) {
+        super(context, c, autoRequery);
+    }
 
-	@Override
-	public void bindView(View view, Context context, Cursor cursor) {
-		
-		String userName = cursor.getString(cursor.getColumnIndex(Messages.OTHER));
-		String content = cursor.getString(cursor.getColumnIndex(Messages.CONTENT));
-		
-		//User names are saved like usr:userName, so deleting that part of user names
-		if(userName.contains(":")){
-			userName = userName.substring(userName.indexOf(':')+1);
-		}
-		
-		TextView nameTv = (TextView) view.findViewById(R.id.userName);
-		TextView contentTv = (TextView) view.findViewById(R.id.content);
-		nameTv.setText(userName);
-		contentTv.setText(content);
-	}
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+        // Address
+        String other = cursor.getString(cursor.getColumnIndex(Messages.OTHER));
+        // Last message text
+        String content = cursor.getString(cursor.getColumnIndex(Messages.CONTENT));
 
-	@Override
-	public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-		return LayoutInflater.from(context).inflate(R.layout.chats_list_item, null);
-	}
-	
-	@Override
-	public long getItemId(int position) {
-		return super.getItemId(position);
-	}
+        // This is an Address of the user we have a conversation with.
+        // For simplicity, just show it without the URI scheme
+        int pos = other.indexOf(':');
+        if (pos >= 0) {
+            other = other.substring(pos+1);
+        }
+
+        TextView nameTv = (TextView) view.findViewById(R.id.userName);
+        TextView contentTv = (TextView) view.findViewById(R.id.content);
+        nameTv.setText(other);
+        contentTv.setText(content);
+    }
+
+    @Override
+    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
+        return LayoutInflater.from(context).inflate(R.layout.chats_list_item, null);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
 
 }

@@ -3,8 +3,8 @@
 
     <item
         android:id="@+id/menu_pstn_call"
-        android:title="@string/pstn_call"
+        android:icon="@drawable/ic_action_call"
         android:showAsAction="always"
-        android:icon="@drawable/ic_action_call"/>
+        android:title="@string/pstn_call"/>
 
 </menu>

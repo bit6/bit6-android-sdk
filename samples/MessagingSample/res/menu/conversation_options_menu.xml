@@ -10,13 +10,13 @@
             android:title="@string/take_video"/>
         <item
             android:id="@+id/menu_select_image"
-            android:title="@string/select_photo"/>        
+            android:title="@string/select_photo"/>
         <item
             android:id="@+id/menu_share_location"
-            android:title="@string/share_location"/>        
+            android:title="@string/share_location"/>
         <item
             android:id="@+id/menu_video_call"
-            android:title="@string/video_call"/>        
+            android:title="@string/video_call"/>
         <item
             android:id="@+id/menu_voice_call"
             android:title="@string/voice_call"/>

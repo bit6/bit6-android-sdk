@@ -1,3 +1,4 @@
+
 package com.bit6.samples.demo;
 
 import android.app.Activity;
@@ -16,89 +17,94 @@ import com.bit6.sdk.ui.RtcMediaView;
 
 public class CallActivity extends Activity implements StateListener {
 
-	private Bit6 bit6;
-	private RelativeLayout rootView;
-	private View menuBar;
-	private RtcMediaView rtcMediaView;
-	private ImageButton videoScalingButton;
-	private boolean scaleAspectFill;
-	private RtcDialog dialog;
+    private Bit6 bit6;
+    private RtcDialog dialog;
+    private RtcMediaView rtcMediaView;
+    private boolean scaleAspectFill;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_call);
-		rootView = (RelativeLayout) findViewById(R.id.root);
-		menuBar = findViewById(R.id.menubar_fragment);
-		bit6 = Bit6.getInstance();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_call);
 
-		dialog = bit6.getDialogFromIntent(getIntent());
-		dialog.addStateListener(this);
+        bit6 = Bit6.getInstance();
 
-		rtcMediaView = dialog.createRtcMediaView(this);
-		rootView.addView(rtcMediaView);
-		menuBar.bringToFront();
-		rootView.invalidate();
+        // Current call controller RtcDialog
+        dialog = bit6.getDialogFromIntent(getIntent());
+        dialog.addStateListener(this);
 
-		videoScalingButton = (ImageButton) findViewById(R.id.button_scaling_mode);
+        // MediaView for displaying video streams
+        rtcMediaView = dialog.createRtcMediaView(this);
 
-		videoScalingButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (scaleAspectFill) {
-					videoScalingButton
-							.setBackgroundResource(R.drawable.ic_action_full_screen);
-					scaleAspectFill = false;
-					rtcMediaView.setScaleFill(scaleAspectFill);
+        RelativeLayout rootView = (RelativeLayout) findViewById(R.id.root);
+        View menuBar = findViewById(R.id.menubar_fragment);
+        rootView.addView(rtcMediaView);
+        menuBar.bringToFront();
+        rootView.invalidate();
 
-				} else {
-					videoScalingButton
-							.setBackgroundResource(R.drawable.ic_action_return_from_full_screen);
-					scaleAspectFill = true;
-					rtcMediaView.setScaleFill(scaleAspectFill);
-				}
-			}
-		});
+        // Configure media view
+        rtcMediaView.setRemoteVideoViewParams(0, 0, 100, 100, true);
+        rtcMediaView.setLocalVideoViewParams(70, 0, 28, 28, false);
 
-		rtcMediaView.setRemotVideoViewParams(0, 0, 100, 100, true);
-		rtcMediaView.setLocalVideoViewParams(70, 0, 28, 28, false);
+        // Hangup button
+        View v = findViewById(R.id.button_disconnect);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.hangup();
+                finish();
+            }
+        });
 
-		((ImageButton) findViewById(R.id.button_disconnect))
-				.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						dialog.hangup();
-						finish();
-					}
-				});
+        // Toggle video scaling
+        ImageButton videoScalingButton = (ImageButton) findViewById(R.id.button_scaling_mode);
+        // Switch camera button
+        ImageButton switchCameraButton = (ImageButton) findViewById(R.id.button_switch_camera);
 
-		ImageButton switchCameraButton = (ImageButton) findViewById(R.id.button_switch_camera);
-		if (!dialog.hasVideo()) {
-			switchCameraButton.setVisibility(View.GONE);
-			videoScalingButton.setVisibility(View.GONE);
-		}
+        // Video call
+        if (dialog.hasVideo()) {
+            switchCameraButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    rtcMediaView.switchCamera();
+                }
+            });
+            videoScalingButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Toggle the mode
+                    scaleAspectFill = !scaleAspectFill;
+                    // Set the new scaling mode
+                    rtcMediaView.setScaleFill(scaleAspectFill);
+                    // Change the button icon
+                    int resId = scaleAspectFill ? 
+                            R.drawable.ic_action_return_from_full_screen : 
+                            R.drawable.ic_action_full_screen;
+                    view.setBackgroundResource(resId);
+                }
+            });
 
-		switchCameraButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				rtcMediaView.switchCamera();
-			}
-		});
-	}
+        }
+        // Audio call
+        else {
+            switchCameraButton.setVisibility(View.GONE);
+            videoScalingButton.setVisibility(View.GONE);
+        }
 
-	public static class MenuBarFragment extends Fragment {
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			return inflater.inflate(R.layout.fr_menubar, container, false);
-		}
-	}
+    }
 
-	@Override
-	public void onStateChanged(RtcDialog d, int state) {
-		if (state == RtcDialog.END) {
-			finish();
-		}
-	}
+    public static class MenuBarFragment extends Fragment {
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.incall_menubar, container, false);
+        }
+    }
+
+    @Override
+    public void onStateChanged(RtcDialog d, int state) {
+        if (state == RtcDialog.END) {
+            finish();
+        }
+    }
 
 }

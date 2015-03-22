@@ -14,7 +14,8 @@
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/loged_in" />
+            android:layout_marginRight="4dp"
+            android:text="@string/logged_in" />
 
         <TextView
             android:id="@+id/logout"
