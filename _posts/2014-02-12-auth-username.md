@@ -10,19 +10,17 @@ A username is case-insensitive and must consist of alphanumeric characters, e.g.
 Create a new user account with a username identity and a password.
 
 ```java
-Bit6 bit6 = Bit6.getInstance();
-
-Address identity = Address.fromParts(Address.KIND_USERNAME, username);
+Address identity = Address.fromParts(Address.KIND_USERNAME, "john");
 
 bit6.signup(identity, pass, new ResultCallback() {
-	@Override
-	public void onResult(boolean success, String msg) {
-		if (success) {
-			Log.e("onResponse", "success "+msg);
-		} else {
-			Log.e("onResponse", "fail "+msg);
-		}
-	}
+    @Override
+    public void onResult(boolean success, String msg) {
+        if (success) {
+            Log.v(TAG, "success " + msg);
+        } else {
+            Log.v(TAG, "error " + msg);
+        }
+    }
 });
 ```
 
@@ -31,16 +29,16 @@ bit6.signup(identity, pass, new ResultCallback() {
 Login into an existing account using an Identity and a password.
 
 ```java
-Address identity = Address.fromParts(Address.KIND_USERNAME, username);
+Address identity = Address.fromParts(Address.KIND_USERNAME, "john");
 
 bit6.login(identity, pass, new ResultCallback() {
-	@Override
-	public void onResult(boolean success, String msg) {
-		if (success) {
-			Log.e("onResponse", "success "+msg);
-		} else {
-			Log.e("onResponse", "fail "+msg);
-		}
-	}
+    @Override
+    public void onResult(boolean success, String msg) {
+        if (success) {
+            Log.v(TAG, "success " + msg);
+        } else {
+            Log.v(TAG, "error " + msg);
+        }
+    }
 });
 ```

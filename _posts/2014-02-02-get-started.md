@@ -47,65 +47,76 @@ public class App extends Application {
 Specify the required permissions.
 
 ```xml
-<uses-permission android:name="android.permission.GET_ACCOUNTS" />
-<uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-<uses-permission android:name="android.permission.USE_CREDENTIALS" />
+<!-- Internet access - Allows applications to connect to the network -->
 <uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<!-- Incoming call handling - Allows to keep the phone from sleeping or screen from dimming -->
 <uses-permission android:name="android.permission.WAKE_LOCK" />
-<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+<!-- Incoming call handling - Access to the vibration effects -->
 <uses-permission android:name="android.permission.VIBRATE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<!-- Voice/Video calling - Allows an application to record audio -->
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<!-- Voice/Video calling - Allows an application to modify global audio settings -->
+<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+<!-- Voice/Video calling, photo/video messages - To access camera services -->
 <uses-permission android:name="android.permission.CAMERA" />
+<!-- Photo/Video messages - Allows an application to read from external storage. -->
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<!-- Location messages - To access location services -->
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+<!-- More GCM push notifications -->
 <permission
     android:name="com.bit6.permission.C2D_MESSAGE"
     android:protectionLevel="signature" />
 
 <uses-permission android:name="com.bit6.permission.C2D_MESSAGE" />
-
-<!-- This app has permission to register and receive data message. -->
 <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
 ```
+
 Modify `<application>` element. `your.package.name` is the package name for your application.
 
 ```xml
 <application>
   <!-- Required for applications which use Google Play Services. -->
-  <meta-data android:name="com.google.android.gms.version"
-   android:value="@integer/google_play_services_version" />
+  <meta-data 
+      android:name="com.google.android.gms.version"
+      android:value="@integer/google_play_services_version" />
 
+  <!-- Bit6 Content Provider -->
   <provider
       android:name="com.bit6.sdk.Bit6ContentProvider"
       android:authorities="your.package.name"
       android:exported="false" />
-          
+
+  <!-- Bit6 receives GCM push notifications -->
   <receiver
       android:name="com.bit6.sdk.gcm.GcmBroadcastReceiver"
       android:permission="com.google.android.c2dm.permission.SEND" >
       <intent-filter>
-
-          <!-- Receives the actual messages. -->
           <action android:name="com.google.android.c2dm.intent.RECEIVE" />
           <category android:name="com.bit6" />
       </intent-filter>
   </receiver>
 
+  <!-- Bit6 handles GCM push notifications -->
+  <service android:name="com.bit6.sdk.gcm.GcmIntentService" />
+
+  <!-- Your custom receiver for incoming calls -->
   <receiver android:name=".IncomingCallReceiver" android:enabled="true">
       <intent-filter>
           <action android:name="your.package.name.intent.INCOMING_CALL"></action>
       </intent-filter>
   </receiver>
 
+  <!-- Your custom reciever for incoming messages -->
   <receiver android:name=".IncomingMessageReceiver" android:enabled="true">
       <intent-filter>
           <action android:name="your.package.name.intent.INCOMING_MESSAGE"></action>
       </intent-filter>
   </receiver>
-
-  <service android:name="com.bit6.sdk.gcm.GcmIntentService" />
 
 </application>
 ```

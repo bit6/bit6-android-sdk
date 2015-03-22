@@ -41,16 +41,15 @@ dialog.launchInCallActivity(this);
 **Step 2.** Create a receiver class which extends BroadcastReceiver.
 
 ```java
-public class IncomingCallReceiver extends BroadcastReceiver{
-	@Override
-	public void onReceive(Context context, Intent intent) {
-	    Intent i = new Intent(context, IncomingCallActivity.class);
-	    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	    // Send Call information to the IncomingCallActivity
-	    i.putExtra(Bit6.INTENT_EXTRA_DIALOG, 
-            intent.getBundleExtra(Bit6.INTENT_EXTRA_DIALOG));
-	    context.startActivity(i);
-	}
+public class IncomingCallReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Intent i = new Intent(context, IncomingCallActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        // Send Call information to the IncomingCallActivity
+        i.putExtras(intent);
+        context.startActivity(i);
+    }
 }
 ```
 
@@ -84,7 +83,6 @@ public void onStateChanged(RtcDialog d, int state) {
 }
 
 ```
-
 
 **Step 4.** Accept the call and show In-Call UI
 

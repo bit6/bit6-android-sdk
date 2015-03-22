@@ -12,9 +12,9 @@ Bit6 supports various authentication mechanisms described in the following secti
 
 ```java
 if (bit6.isAuthenticated()) {
-	Log.e(TAG, "Authenticated")
+	Log.v(TAG, "Authenticated")
 } else {
-	Log.e(TAG, "Not Authenticated ")
+	Log.v(TAG, "Not Authenticated ")
 }
 ```
 
