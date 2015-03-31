@@ -107,14 +107,14 @@ Modify `<application>` element. `your.package.name` is the package name for your
   <!-- Your custom receiver for incoming calls -->
   <receiver android:name=".IncomingCallReceiver" android:enabled="true">
       <intent-filter>
-          <action android:name="your.package.name.intent.INCOMING_CALL"></action>
+          <action android:name="your.package.name.BIT6_INCOMING_CALL"></action>
       </intent-filter>
   </receiver>
 
   <!-- Your custom reciever for incoming messages -->
   <receiver android:name=".IncomingMessageReceiver" android:enabled="true">
       <intent-filter>
-          <action android:name="your.package.name.intent.INCOMING_MESSAGE"></action>
+          <action android:name="your.package.name.BIT6_INCOMING_MESSAGE"></action>
       </intent-filter>
   </receiver>
 

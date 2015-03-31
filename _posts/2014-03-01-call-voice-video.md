@@ -20,7 +20,7 @@ Register default `InCallActivity` in Manifest.xml. You can build custom In-Call 
 ```java
 // Initiate a call
 Address to = Address.parse("usr:john");
-RtcDialog dialog = bit6.startCall(to, isVideo);
+RtcDialog dialog = bit6.getCallClient().startCall(to, isVideo);
 // Launch the default InCall activity
 dialog.launchInCallActivity(this);
 ```  
@@ -28,12 +28,12 @@ dialog.launchInCallActivity(this);
 
 ### Handle an Incoming Call
 
-**Step 1.** Register Broadcast Receiver for `your.package.name.intent.INCOMING_CALL` intent in your Manifest.xml
+**Step 1.** Register Broadcast Receiver for `your.package.name.BIT6_INCOMING_CALL` intent in your Manifest.xml
 
 ```java
 <receiver android:name=".IncomingCallReceiver" android:enabled="true">
     <intent-filter>
-        <action android:name="your.package.name.intent.INCOMING_CALL"></action>
+        <action android:name="your.package.name.BIT6_INCOMING_CALL"></action>
     </intent-filter>
 </receiver>
 ```
@@ -60,7 +60,7 @@ Get call controller and display UI for answering / rejecting a call
 
 ```java
 // Get RtcDialog (call controller) for this call
-RtcDialog dialog = bit6.getDialogFromIntent(getIntent());
+RtcDialog dialog = bit6.getCallClient().getDialogFromIntent(getIntent());
 dialog.addStateListener(this);
 
 // Get caller information

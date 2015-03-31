@@ -11,7 +11,7 @@ Bit6 supports various authentication mechanisms described in the following secti
 ### Check if the user is authenticated
 
 ```java
-if (bit6.isAuthenticated()) {
+if (bit6.getSessionClient().isAuthenticated()) {
 	Log.v(TAG, "Authenticated")
 } else {
 	Log.v(TAG, "Not Authenticated ")
@@ -22,5 +22,5 @@ if (bit6.isAuthenticated()) {
 ### Logout
 
 ```java
-bit6.logout();
+bit6.getSessionClient().logout();
 ```

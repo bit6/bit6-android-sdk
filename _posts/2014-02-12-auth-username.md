@@ -12,7 +12,7 @@ Create a new user account with a username identity and a password.
 ```java
 Address identity = Address.fromParts(Address.KIND_USERNAME, "john");
 
-bit6.signup(identity, pass, new ResultCallback() {
+bit6.getSessionClient().signup(identity, pass, new ResultHandler() {
     @Override
     public void onResult(boolean success, String msg) {
         if (success) {
@@ -31,7 +31,7 @@ Login into an existing account using an Identity and a password.
 ```java
 Address identity = Address.fromParts(Address.KIND_USERNAME, "john");
 
-bit6.login(identity, pass, new ResultCallback() {
+bit6.getSessionClient().login(identity, pass, new ResultHandler() {
     @Override
     public void onResult(boolean success, String msg) {
         if (success) {

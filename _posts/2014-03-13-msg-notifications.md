@@ -9,7 +9,7 @@ title: 'Notifications'
 Get notified when another user is typing a message, or on any other real-time notification.
 
 ```java
-bit6.addRtNotificationListener(new RtNotificationListener() {
+bit6.getNotificationClient().addListener(new NotificationClient.Listener() {
     public void onTypingReceived(String from) {
         Log.v(TAG, "Typing from: " + from);
     }
@@ -23,12 +23,12 @@ bit6.addRtNotificationListener(new RtNotificationListener() {
 
 ```java
 String destination = "usr:john"
-bit6.sendTypingNotification(Address.parse(destination));
+bit6.getNotificationClient().sendTypingNotification(Address.parse(destination));
 ```
 
 ### Send Custom Notification
 
 ```java
 String destination = "usr:john"
-bit6.sendNotification(Address.parse(destination), "mytype");
+bit6.getNotificationClient().sendNotification(Address.parse(destination), "mytype");
 ```
