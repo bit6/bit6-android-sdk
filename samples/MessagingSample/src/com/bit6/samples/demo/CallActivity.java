@@ -30,7 +30,7 @@ public class CallActivity extends Activity implements StateListener {
         bit6 = Bit6.getInstance();
 
         // Current call controller RtcDialog
-        dialog = bit6.getDialogFromIntent(getIntent());
+        dialog = bit6.getCallClient().getDialogFromIntent(getIntent());
         dialog.addStateListener(this);
 
         // MediaView for displaying video streams

@@ -20,9 +20,11 @@ import android.widget.Toast;
 
 import com.bit6.sdk.Address;
 import com.bit6.sdk.Bit6;
-import com.bit6.sdk.ResultCallback;
+import com.bit6.sdk.ResultHandler;
 
 public class MainActivity extends Activity implements OnClickListener, OnItemSelectedListener {
+
+    static final String TAG = "Main";
 
     private Bit6 bit6;
 
@@ -75,7 +77,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemSel
     // If user is authenticated - go to ChatsActivity
     private boolean doneIfAuthenticated() {
         // Is the user authenticated?
-        boolean flag = bit6.isAuthenticated();
+        boolean flag = bit6.getSessionClient().isAuthenticated();
         if (flag) {
             // Go the Chats activity
             Intent intent = new Intent(MainActivity.this, ChatsActivity.class);
@@ -86,7 +88,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemSel
     }
 
     // Handle the authentication result (from login or signup calls)
-    private ResultCallback mAuthResultCallback = new ResultCallback() {
+    private ResultHandler mAuthResultHandler = new ResultHandler() {
 
         @Override
         public void onResult(boolean success, String msg) {
@@ -98,14 +100,14 @@ public class MainActivity extends Activity implements OnClickListener, OnItemSel
                     msg = null;
                 }
             } else {
-                Log.e("auth.onFailure", msg);
+                Log.e(TAG, "Auth failed: " + msg);
             }
             if (msg != null) {
-                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();                    
+                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
             }
         }
     };
-    
+
     @Override
     public void onClick(View v) {
         // Signup or Login clicked
@@ -115,7 +117,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemSel
 
         // Invalid username or password
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(pass)) {
-            Toast.makeText(this, getString(R.string.incorrect_credentials), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.incorrect_credentials), Toast.LENGTH_LONG)
+                    .show();
             return;
         }
 
@@ -128,14 +131,13 @@ public class MainActivity extends Activity implements OnClickListener, OnItemSel
 
         // Signup
         if (v == mSignup) {
-            bit6.signup(identity, pass, mAuthResultCallback);
+            bit6.getSessionClient().signup(identity, pass, mAuthResultHandler);
         }
         // Login
         else {
-            bit6.login(identity, pass, mAuthResultCallback);            
+            bit6.getSessionClient().login(identity, pass, mAuthResultHandler);
         }
     }
-
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -156,7 +158,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemSel
         int oldEnv = getBit6Environment();
 
         // Nothing to change
-        if (env == oldEnv) return;
+        if (env == oldEnv)
+            return;
 
         // Destroy current instance of Bit6
         bit6.destroy();
@@ -170,7 +173,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemSel
         // Pretty much the same code as in the App class
         String apikey = env == Bit6.PRODUCTION ? App.PROD_API_KEY : App.DEV_API_KEY;
         // Re-initialized Bit6 in the new environment
-        bit6.init(getApplicationContext(), apikey, env);        
+        bit6.init(getApplicationContext(), apikey, env);
     }
 
     private int getBit6Environment() {

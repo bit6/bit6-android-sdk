@@ -40,11 +40,12 @@ import com.bit6.sdk.Bit6;
 import com.bit6.sdk.Message;
 import com.bit6.sdk.Message.Messages;
 import com.bit6.sdk.MessageStatusListener;
-import com.bit6.sdk.ResultCallback;
-import com.bit6.sdk.RtNotificationListener;
+import com.bit6.sdk.NotificationClient;
+import com.bit6.sdk.ResultHandler;
 import com.bit6.sdk.RtcDialog;
 
-public class ChatActivity extends Activity implements RtNotificationListener, MessageStatusListener {
+public class ChatActivity extends Activity implements NotificationClient.Listener,
+        MessageStatusListener {
 
     private static final String TAG = "ChatActivity";
 
@@ -92,17 +93,6 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
         String dest = getIntent().getStringExtra(INTENT_EXTRA_DEST);
         showConversation(dest);
 
-        // Context menu for the list
-        mListView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
-            @Override
-            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-                menu.add(0, info.position, 0, getString(R.string.delete_message));
-            }
-        });
-        registerForContextMenu(mListView);
-
         // Message compose text field
         mContent = (EditText) findViewById(R.id.text);
         mContent.addTextChangedListener(new TextWatcher() {
@@ -110,7 +100,7 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (count > 0) {
-                    bit6.sendTypingNotification(other);
+                    bit6.getNotificationClient().sendTypingNotification(other);
                 }
             }
 
@@ -137,7 +127,7 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
         mTyping = (TextView) findViewById(R.id.typing);
 
         // Listen to 'typing' notifications
-        bit6.addRtNotificationListener(this);
+        bit6.getNotificationClient().addListener(this);
     }
 
     @Override
@@ -148,7 +138,7 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
 
     @Override
     protected void onDestroy() {
-        bit6.removeRtNotificationListener(this);
+        bit6.getNotificationClient().removeListener(this);
         mAdapter.unregisterDataSetObserver(mAdapterObserver);
         super.onDestroy();
     }
@@ -192,11 +182,7 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
         int position = item.getItemId();
         Cursor c = (Cursor) mAdapter.getItem(position);
         String msgId = c.getString(c.getColumnIndex(Messages.ID));
-        bit6.deleteMessage(msgId, new ResultCallback() {
-            @Override
-            public void onResult(boolean success, String msg) {
-            }
-        });
+        bit6.getMessageClient().deleteMessage(msgId, ResultHandler.EMPTY);
 
         return super.onContextItemSelected(item);
     }
@@ -222,7 +208,7 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
 
     // Start voice or video call
     private void startCall(boolean isVideo) {
-        RtcDialog dialog = bit6.startCall(other, isVideo);
+        RtcDialog dialog = bit6.getCallClient().startCall(other, isVideo);
 
         // Launch default InCall Activity
         // d.launchInCallActivity(this);
@@ -329,26 +315,21 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
         if (!TextUtils.isEmpty(text)) {
             mContent.setText("");
             Message m = Message.newMessage(other).text(text);
-            bit6.sendMessage(m, ChatActivity.this);
+            bit6.getMessageClient().sendMessage(m, ChatActivity.this);
         }
     }
 
     // Send a message with attachment
     private void sendMessageWithFile(String text, File f) {
         Message m = Message.newMessage(other).text(text).attach(f.getAbsolutePath());
-        bit6.sendMessage(m, this);
+        bit6.getMessageClient().sendMessage(m, this);
     }
 
     // Send your current location
     private void shareLocation() {
         // Message m = Message.newMessage(to).geoLocation(40.192324, 44.504161);
         // bit6.sendMessage(m, this);
-        bit6.sendMyCurrentLocation(other, this);
-    }
-
-    @Override
-    public void onResult(boolean success, String msg) {
-        Toast.makeText(ChatActivity.this, msg, Toast.LENGTH_LONG).show();
+        bit6.getMessageClient().sendMyCurrentLocation(other, this);
     }
 
     @Override
@@ -384,7 +365,7 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
         tv.setText(other.getValue());
 
         // Cursor to messages in this conversion
-        mCursor = bit6.getConversation(other);
+        mCursor = bit6.getMessageClient().getConversation(other);
 
         mAdapterObserver = new DataSetObserver() {
             @Override
@@ -400,6 +381,18 @@ public class ChatActivity extends Activity implements RtNotificationListener, Me
         // List of messages
         mListView = (ListView) findViewById(R.id.list);
         mListView.setAdapter(mAdapter);
+
+        // Context menu for the list
+        registerForContextMenu(mListView);
+        mListView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+                menu.add(0, info.position, 0, getString(R.string.delete_message));
+            }
+        });
+
         // Scroll to the latest message
         scrollToNewestItem();
 

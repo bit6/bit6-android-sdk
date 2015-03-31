@@ -54,7 +54,7 @@ public class ChatsActivity extends Activity {
         // Cursor with messages grouped by chat members user names
         // Each row contains:
         // Messages._ID, Messages.OTHER, Messages.CONTENT, Messages.CREATED
-        cursor = bit6.getConversations();
+        cursor = bit6.getMessageClient().getConversations();
 
         // Scroll to the beginning of the list when data changes
         mAdapterObserver = new DataSetObserver() {
@@ -106,7 +106,7 @@ public class ChatsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // Logout and delete saved data
-                bit6.logout();
+                bit6.getSessionClient().logout();
                 // Go back to login screen
                 Intent intent = new Intent(ChatsActivity.this, MainActivity.class);
                 startActivity(intent);
@@ -115,7 +115,7 @@ public class ChatsActivity extends Activity {
         });
 
         // Show current user name
-        String txt = getString(R.string.logged_in, bit6.getOwnIdentity().toString());
+        String txt = getString(R.string.logged_in, bit6.getSessionClient().getOwnIdentity().toString());
         TextView tv = (TextView) findViewById(R.id.username);
         tv.setText(txt);
     }
@@ -175,7 +175,7 @@ public class ChatsActivity extends Activity {
                 int len = phone != null ? phone.length() : 0;
                 // Is phone number valid?
                 if (len > 6 && len < 14 && phone.charAt(0) == '+') {
-                    RtcDialog d = bit6.startPhoneCall(phone);
+                    RtcDialog d = bit6.getCallClient().startPhoneCall(phone);
                     d.launchInCallActivity(ChatsActivity.this);
                     dialog.dismiss();
                 } else {

@@ -2,12 +2,8 @@
 package com.bit6.samples.demo;
 
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -43,7 +39,7 @@ public class IncomingCallActivity extends Activity implements
         bit6 = Bit6.getInstance();
 
         // Call controller RtcDialog
-        dialog = bit6.getDialogFromIntent(getIntent());
+        dialog = bit6.getCallClient().getDialogFromIntent(getIntent());
 
         dialog.addStateListener(this);
 
@@ -57,7 +53,7 @@ public class IncomingCallActivity extends Activity implements
         // Get the username from 'usr:' uri
         int pos = other.indexOf(':');
         callerName = pos > 0 ? other.substring(pos + 1) : other;
-        
+
         // Prepare the UI
         TextView message = (TextView) findViewById(R.id.message);
         String msg = String.format(getString(R.string.user_is_calling), callerName);

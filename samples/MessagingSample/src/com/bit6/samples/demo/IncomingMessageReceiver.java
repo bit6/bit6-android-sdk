@@ -1,6 +1,8 @@
 
 package com.bit6.samples.demo;
 
+import com.bit6.sdk.Bit6;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -12,8 +14,8 @@ public class IncomingMessageReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String content = intent.getStringExtra("content");
-        String senderName = intent.getStringExtra("senderName");
+        String content = intent.getStringExtra(Bit6.INTENT_EXTRA_CONTENT);
+        String senderName = intent.getStringExtra(Bit6.INTENT_EXTRA_NAME);
         if (content != null && senderName != null) {
             showNotification(context, content, senderName);
         }

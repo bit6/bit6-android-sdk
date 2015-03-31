@@ -7,7 +7,6 @@ import java.util.Date;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
@@ -19,8 +18,6 @@ import android.widget.TextView;
 
 import com.bit6.samples.demo.imagecache.ImageFetcher;
 import com.bit6.sdk.Message;
-import com.bit6.sdk.Message.Attachment;
-import com.bit6.sdk.Message.GeoLocation;
 import com.bit6.sdk.Message.Messages;
 
 public class ChatAdapter extends CursorAdapter {
