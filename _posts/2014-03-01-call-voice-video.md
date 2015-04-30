@@ -3,6 +3,12 @@ category: calling
 title: 'Voice & Video Calls'
 ---
 
+Bit6 calling capabilities are accessed via `CallClient`.
+
+```java
+CallClient callClient = bit6.getCallClient();
+```
+
 ### Default In-Call UI
 
 Register default `InCallActivity` in Manifest.xml. You can build custom In-Call UI as described in a [separate section](#calling-ui).
@@ -12,7 +18,7 @@ Register default `InCallActivity` in Manifest.xml. You can build custom In-Call 
     android:label="@string/app_name"
     android:configChanges="orientation|screenSize"
     android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
-</activity> 
+</activity>
 ```
 
 ### Start an Outgoing Call
@@ -20,10 +26,10 @@ Register default `InCallActivity` in Manifest.xml. You can build custom In-Call 
 ```java
 // Initiate a call
 Address to = Address.parse("usr:john");
-RtcDialog dialog = bit6.getCallClient().startCall(to, isVideo);
+RtcDialog dialog = callClient.startCall(to, isVideo);
 // Launch the default InCall activity
 dialog.launchInCallActivity(this);
-```  
+```
 
 
 ### Handle an Incoming Call
@@ -60,7 +66,7 @@ Get call controller and display UI for answering / rejecting a call
 
 ```java
 // Get RtcDialog (call controller) for this call
-RtcDialog dialog = bit6.getCallClient().getDialogFromIntent(getIntent());
+RtcDialog dialog = callClient.getDialogFromIntent(getIntent());
 dialog.addStateListener(this);
 
 // Get caller information

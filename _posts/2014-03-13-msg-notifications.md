@@ -3,32 +3,39 @@ category: messaging
 title: 'Notifications'
 ---
 
-
 ### Real-Time Notifications
 
-Get notified when another user is typing a message, or on any other real-time notification.
+Bit6 notification capabilities are accessed via `NotificationClient`
 
 ```java
-bit6.getNotificationClient().addListener(new NotificationClient.Listener() {
-    public void onTypingReceived(String from) {
-        Log.v(TAG, "Typing from: " + from);
-    }
-    public void onNotificationReceived(String from, String type, JSONObject data) {
-        Log.e(TAG, "Notification: " + data.toString());      
-    }
-});
+NotificationClient notificationClient = bit6.getNotificationClient();
 ```
 
 ### Send Typing Notification
 
 ```java
-String destination = "usr:john"
-bit6.getNotificationClient().sendTypingNotification(Address.parse(destination));
+Address to = Address.parse("usr:john");
+notificationClient.sendTypingNotification(to);
 ```
 
 ### Send Custom Notification
 
 ```java
-String destination = "usr:john"
-bit6.getNotificationClient().sendNotification(Address.parse(destination), "mytype");
+Address to = Address.parse("usr:john");
+notificationClient.sendNotification(to, "mytype");
+```
+
+### Receiving Notifications
+
+Get notified when another user is typing a message, or on any other real-time notification.
+
+```java
+notificationClient.addListener(new NotificationClient.Listener() {
+    public void onTypingReceived(String from) {
+        Log.v(TAG, "Typing from: " + from);
+    }
+    public void onNotificationReceived(String from, String type, JSONObject data) {
+        Log.e(TAG, "Notification: " + data.toString());
+    }
+});
 ```
