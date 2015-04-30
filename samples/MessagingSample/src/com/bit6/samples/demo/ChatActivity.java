@@ -38,11 +38,12 @@ import com.bit6.samples.demo.imagecache.ImageFetcher;
 import com.bit6.sdk.Address;
 import com.bit6.sdk.Bit6;
 import com.bit6.sdk.Message;
-import com.bit6.sdk.Message.Messages;
 import com.bit6.sdk.MessageStatusListener;
 import com.bit6.sdk.NotificationClient;
+import com.bit6.sdk.OutgoingMessage;
 import com.bit6.sdk.ResultHandler;
 import com.bit6.sdk.RtcDialog;
+import com.bit6.sdk.db.Contract;
 
 public class ChatActivity extends Activity implements NotificationClient.Listener,
         MessageStatusListener {
@@ -55,9 +56,12 @@ public class ChatActivity extends Activity implements NotificationClient.Listene
             REQUEST_PHOTO_CAPTURE = 5;
 
     public final static String INTENT_EXTRA_DEST = "dest";
+    public final static String INTENT_EXTRA_CONV_ID = "conv_id";
 
     private Bit6 bit6;
     private Address other;
+    // Conversation id
+    private String c_id;
 
     private EditText mContent;
     private Button mSend;
@@ -89,9 +93,6 @@ public class ChatActivity extends Activity implements NotificationClient.Listene
 
         // Bit6 instance
         bit6 = Bit6.getInstance();
-        // The other party for this conversation
-        String dest = getIntent().getStringExtra(INTENT_EXTRA_DEST);
-        showConversation(dest);
 
         // Message compose text field
         mContent = (EditText) findViewById(R.id.text);
@@ -128,18 +129,21 @@ public class ChatActivity extends Activity implements NotificationClient.Listene
 
         // Listen to 'typing' notifications
         bit6.getNotificationClient().addListener(this);
+
+        onNewIntent(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        showConversation(intent.getStringExtra(INTENT_EXTRA_DEST));
+        showConversation(intent.getStringExtra(INTENT_EXTRA_DEST), intent.getStringExtra(INTENT_EXTRA_CONV_ID));
     }
 
     @Override
     protected void onDestroy() {
         bit6.getNotificationClient().removeListener(this);
-        mAdapter.unregisterDataSetObserver(mAdapterObserver);
+        if (mAdapter != null) {
+            mAdapter.unregisterDataSetObserver(mAdapterObserver);
+        }
         super.onDestroy();
     }
 
@@ -181,8 +185,16 @@ public class ChatActivity extends Activity implements NotificationClient.Listene
     public boolean onContextItemSelected(MenuItem item) {
         int position = item.getItemId();
         Cursor c = (Cursor) mAdapter.getItem(position);
-        String msgId = c.getString(c.getColumnIndex(Messages.ID));
-        bit6.getMessageClient().deleteMessage(msgId, ResultHandler.EMPTY);
+        String msgId = c.getString(c.getColumnIndex(Contract.Messages._ID));
+        bit6.getMessageClient().deleteMessage(msgId, new ResultHandler() {
+
+            @Override
+            public void onResult(boolean success, String msg) {
+                if (msg != null) {
+                    Toast.makeText(ChatActivity.this, msg, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
         return super.onContextItemSelected(item);
     }
@@ -314,43 +326,35 @@ public class ChatActivity extends Activity implements NotificationClient.Listene
         String text = mContent.getText().toString().trim();
         if (!TextUtils.isEmpty(text)) {
             mContent.setText("");
-            Message m = Message.newMessage(other).text(text);
-            bit6.getMessageClient().sendMessage(m, ChatActivity.this);
+            OutgoingMessage m = bit6.getMessageClient().compose(other).text(text);
+            m.send(this);
         }
     }
 
     // Send a message with attachment
     private void sendMessageWithFile(String text, File f) {
-        Message m = Message.newMessage(other).text(text).attach(f.getAbsolutePath());
-        bit6.getMessageClient().sendMessage(m, this);
+        OutgoingMessage m = bit6.getMessageClient().compose(other).text(text)
+                .attach(f.getAbsolutePath());
+        m.send(this);
     }
 
     // Send your current location
     private void shareLocation() {
-        // Message m = Message.newMessage(to).geoLocation(40.192324, 44.504161);
-        // bit6.sendMessage(m, this);
         bit6.getMessageClient().sendMyCurrentLocation(other, this);
     }
 
     @Override
     public void onMessageStatusChanged(Message m, int state) {
-        if (state == Message.STATUS_PREPARING) {
+        if (state == Contract.Messages.STATUS_PREPARING) {
             Toast.makeText(ChatActivity.this, "prepare", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void showConversation(String dest) {
+    private void showConversation(String convId, final String conv_id) {
 
-        // Create Bit6 Address
-        if (dest != null) {
-            // Already have a scheme/kind
-            if (dest.indexOf(':') > 0) {
-                other = Address.parse(dest);
-            }
-            // Assume a username kind
-            else {
-                other = Address.fromParts(Address.KIND_USERNAME, dest);
-            }
+        // Create Bit6 Address object from a destination
+        if (convId != null) {
+            other = Address.parse(convId);
         }
 
         // We do not have a valid address!
@@ -359,19 +363,38 @@ public class ChatActivity extends Activity implements NotificationClient.Listene
             finish();
             return;
         }
+        
+        if(TextUtils.isEmpty(conv_id)){
+            Cursor c = getContentResolver().query(
+                    Contract.Conversations.CONTENT_URI, null,
+                    Contract.Conversations.ID+"=?", new String[]{convId}, null);
+            while(c.moveToNext()){
+                c_id = c.getString(c.getColumnIndex(Contract.Conversations._ID));
+            }
+        }else{
+            c_id = conv_id;
+        }
+
+        bit6.getMessageClient().markConversationAsRead(c_id);
 
         // Show user we are chatting with
         TextView tv = (TextView) findViewById(R.id.dest);
         tv.setText(other.getValue());
 
         // Cursor to messages in this conversion
-        mCursor = bit6.getMessageClient().getConversation(other);
+        mCursor = getContentResolver().query(
+                Contract.Messages.CONTENT_URI, null,
+                Contract.Messages.CONVERSATION_ID + "=?", new String[] {
+                    c_id
+                },
+                Contract.Messages.CREATED + " ASC");
 
         mAdapterObserver = new DataSetObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
                 scrollToNewestItem();
+                bit6.getMessageClient().markConversationAsRead(c_id);
             }
         };
 

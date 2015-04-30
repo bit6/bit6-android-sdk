@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.bit6.samples.demo.imagecache.ImageFetcher;
 import com.bit6.sdk.Message;
-import com.bit6.sdk.Message.Messages;
+import com.bit6.sdk.db.Contract;
 
 public class ChatAdapter extends CursorAdapter {
 
@@ -33,7 +33,7 @@ public class ChatAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
-        String content = cursor.getString(cursor.getColumnIndex(Messages.CONTENT));
+        String content = cursor.getString(cursor.getColumnIndex(Contract.Messages.CONTENT));
         TextView contentTv = (TextView) view.findViewById(R.id.content);
         contentTv.setText(content);
 
@@ -46,37 +46,38 @@ public class ChatAdapter extends CursorAdapter {
         thumb.setVisibility(View.GONE);
         video.setVisibility(View.GONE);
 
-        long stamp = cursor.getLong(cursor.getColumnIndex(Messages.UPDATED));
+        long stamp = cursor.getLong(cursor.getColumnIndex(Contract.Messages.UPDATED));
         if (stamp == 0) {
-            stamp = cursor.getLong(cursor.getColumnIndex(Messages.CREATED));
+            stamp = cursor.getLong(cursor.getColumnIndex(Contract.Messages.CREATED));
         }
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         String stampString = df.format(new Date(stamp));
 
         dateTv.setText(stampString);
 
-        int flags = cursor.getInt(cursor.getColumnIndex(Messages.FLAGS));
+        int flags = cursor.getInt(cursor.getColumnIndex(Contract.Messages.FLAGS));
 
-        int type = Message.getType(flags);
+        int type = Contract.Messages.getType(flags);
         
-        if ( type == Message.TYPE_ATTACH || type == Message.TYPE_GEOLOC) {
+        if ( type == Contract.Messages.TYPE_ATTACH || type == Contract.Messages.TYPE_GEOLOC) {
             thumb.setVisibility(View.VISIBLE);
 
             // Thumbnail image for this message, if any
-            String thumbUri = cursor.getString(cursor.getColumnIndex(Messages.THUMB_URI));
+            String thumbUri = cursor.getString(cursor.getColumnIndex(Contract.Messages.THUMB_URI));
             if (thumbUri != null) {
                 mImageFetcher.loadImage(thumbUri, thumb);
             }
 
             // Additional data for the message - attachment, geo location etc
-            String dataStr = cursor.getString(cursor.getColumnIndex(Messages.DATA));
-
+            String dataStr = cursor.getString(cursor.getColumnIndex(Contract.Messages.DATA));
+            Message.Data data = Message.getData(dataStr, flags);
+            
             // Intent that will be used when this item is clicked
             Intent intent = null;
 
             // Message has an attachment
-            if (type == Message.TYPE_ATTACH) {
-                Message.Attachment attach = Message.getDataAsAttachment(dataStr);
+            if (data instanceof Message.Attachment) {
+                Message.Attachment attach = (Message.Attachment)data;
                 if (attach != null) {
                     String ctype = attach.getContentType();
                     // Show media playing icon
@@ -88,8 +89,8 @@ public class ChatAdapter extends CursorAdapter {
                 }
             }
             // Message has a geo location
-            else if (type == Message.TYPE_GEOLOC) {
-                Message.GeoLocation geo = Message.getDataAsGeoLocation(dataStr);
+            else if (data instanceof Message.GeoLocation) {
+                Message.GeoLocation geo = (Message.GeoLocation)data;
                 Uri uri = geo.getMapUri();
                 intent = new Intent(android.content.Intent.ACTION_VIEW, uri);
             }
@@ -102,7 +103,7 @@ public class ChatAdapter extends CursorAdapter {
         }
 
         // Show status
-        if (Message.isIncoming(flags)) {
+        if (Contract.Messages.isIncoming(flags)) {
             statusTv.setVisibility(View.GONE);
         } else {
             statusTv.setVisibility(View.VISIBLE);
@@ -112,8 +113,8 @@ public class ChatAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        int flags = cursor.getInt(cursor.getColumnIndex(Messages.FLAGS));
-        boolean isIncoming = Message.isIncoming(flags);
+        int flags = cursor.getInt(cursor.getColumnIndex(Contract.Messages.FLAGS));
+        boolean isIncoming = Contract.Messages.isIncoming(flags);
         int resId = isIncoming ? R.layout.incoming_chat_item : R.layout.outgoing_chat_item;
         return LayoutInflater.from(context).inflate(resId, null);
     }
@@ -126,24 +127,24 @@ public class ChatAdapter extends CursorAdapter {
     @Override
     public int getItemViewType(int position) {
         Cursor cursor = (Cursor) getItem(position);
-        int flags = cursor.getInt(cursor.getColumnIndex(Messages.FLAGS));
-        boolean isIncoming = Message.isIncoming(flags);
+        int flags = cursor.getInt(cursor.getColumnIndex(Contract.Messages.FLAGS));
+        boolean isIncoming = Contract.Messages.isIncoming(flags);
         return isIncoming ? 0 : 1;
     }
 
     private String getMessageStatus(int flags) {
-        int status = Message.getStatus(flags);
+        int status = Contract.Messages.getStatus(flags);
 
         switch (status) {
-            case Message.STATUS_SENDING:
+            case Contract.Messages.STATUS_SENDING:
                 return "sending";
-            case Message.STATUS_SENT:
+            case Contract.Messages.STATUS_SENT:
                 return "sent";
-            case Message.STATUS_FAILED:
+            case Contract.Messages.STATUS_FAILED:
                 return "failed";
-            case Message.STATUS_DELIVERED:
+            case Contract.Messages.STATUS_DELIVERED:
                 return "delivered";
-            case Message.STATUS_READ:
+            case Contract.Messages.STATUS_READ:
                 return "read";
             default:
                 return "sending";

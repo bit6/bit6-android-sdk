@@ -14,6 +14,7 @@
     <string name="logout"> Logout</string>
     <string name="compose">Compose</string>
     <string name="delete_message">Delete Message</string>
+    <string name="delete_conversation">Delete Conversation</string>
     <string name="incorrect_credentials">Incorrect username/password</string>
     <string name="take_photo">Take Photo</string>
     <string name="take_video">Take Video</string>

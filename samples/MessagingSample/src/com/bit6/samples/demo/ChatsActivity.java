@@ -3,19 +3,24 @@ package com.bit6.samples.demo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnCreateContextMenuListener;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -27,9 +32,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bit6.sdk.Address;
 import com.bit6.sdk.Bit6;
-import com.bit6.sdk.Message.Messages;
+import com.bit6.sdk.ResultHandler;
 import com.bit6.sdk.RtcDialog;
+import com.bit6.sdk.db.Contract;
 
 public class ChatsActivity extends Activity {
 
@@ -48,13 +55,15 @@ public class ChatsActivity extends Activity {
         setContentView(R.layout.activity_chat_list);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        
+
         bit6 = Bit6.getInstance();
 
         // Cursor with messages grouped by chat members user names
         // Each row contains:
         // Messages._ID, Messages.OTHER, Messages.CONTENT, Messages.CREATED
-        cursor = bit6.getMessageClient().getConversations();
+        cursor = getContentResolver().query(
+                Contract.Conversations.CONTENT_URI_WITH_LAST_MESSAGE, null,
+                null, null, null);
 
         // Scroll to the beginning of the list when data changes
         mAdapterObserver = new DataSetObserver() {
@@ -77,8 +86,18 @@ public class ChatsActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor c = (Cursor) parent.getItemAtPosition(position);
-                String other = c.getString(c.getColumnIndex(Messages.OTHER));
-                showChatActivity(other);
+                String convId = c.getString(c.getColumnIndex(Contract.Conversations.ID));
+                String conv_id = c.getString(c.getColumnIndex(Contract.Conversations._ID));
+                showChatActivity(convId, conv_id);
+            }
+        });
+        registerForContextMenu(mListView);
+        mListView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+                menu.add(0, info.position, 0, getString(R.string.delete_conversation));
             }
         });
 
@@ -94,7 +113,14 @@ public class ChatsActivity extends Activity {
             public void onClick(View v) {
                 String dest = mDest.getText().toString().trim();
                 if (!TextUtils.isEmpty(dest)) {
-                    showChatActivity(dest);
+                    Address other;
+                    if (dest.indexOf(':') > 0) {
+                        other = Address.parse(dest);
+                    } else {
+                        other = Address.fromParts(Address.KIND_USERNAME, dest);
+                    }
+                    Uri uri = bit6.getMessageClient().addConversation(other);
+                    showChatActivity(other.toString(), String.valueOf(ContentUris.parseId(uri)));
                 }
             }
         });
@@ -115,7 +141,8 @@ public class ChatsActivity extends Activity {
         });
 
         // Show current user name
-        String txt = getString(R.string.logged_in, bit6.getSessionClient().getOwnIdentity().toString());
+        String txt = getString(R.string.logged_in, bit6.getSessionClient().getOwnIdentity()
+                .toString());
         TextView tv = (TextView) findViewById(R.id.username);
         tv.setText(txt);
     }
@@ -143,10 +170,20 @@ public class ChatsActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int position = item.getItemId();
+        Cursor c = (Cursor) mAdapter.getItem(position);
+        String convId = c.getString(c.getColumnIndex(Contract.Conversations._ID));
+        bit6.getMessageClient().deleteConversation(convId, ResultHandler.EMPTY);
+        return super.onContextItemSelected(item);
+    }
+
     // Show Chat activity
-    private void showChatActivity(String other) {
+    private void showChatActivity(String convId, String conv_id) {
         Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("dest", other);
+        intent.putExtra(ChatActivity.INTENT_EXTRA_DEST, convId);
+        intent.putExtra(ChatActivity.INTENT_EXTRA_CONV_ID, conv_id);
         startActivity(intent);
     }
 

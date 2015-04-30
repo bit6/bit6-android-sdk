@@ -118,7 +118,7 @@ public class IncomingCallActivity extends Activity implements
     public void onStateChanged(RtcDialog d, int state) {
         if (state == RtcDialog.MISSED) {
             String text = getString(R.string.missed_call);
-            IncomingMessageReceiver.showNotification(this, text, callerName);
+            IncomingMessageReceiver.showNotification(this, text, dialog.getOther(), callerName);
         }
         else if (state == RtcDialog.END) {
             finish();

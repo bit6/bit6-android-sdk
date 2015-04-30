@@ -15,18 +15,22 @@ public class IncomingMessageReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String content = intent.getStringExtra(Bit6.INTENT_EXTRA_CONTENT);
+        String sender = intent.getStringExtra(Bit6.INTENT_EXTRA_FROM);
         String senderName = intent.getStringExtra(Bit6.INTENT_EXTRA_NAME);
-        if (content != null && senderName != null) {
-            showNotification(context, content, senderName);
+        if (content != null && sender != null) {
+            showNotification(context, content, sender, senderName);
         }
     }
 
     // Helper method for showing a notification that leads to a chat screen
     // Also called from IncomingCallActivity
-    static void showNotification(Context context, String text, String senderName) {
-
+    static void showNotification(Context context, String text, String sender, String senderName) {
+        if (senderName == null) {
+            senderName = sender;
+        }
+        
         Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra(ChatActivity.INTENT_EXTRA_DEST, senderName);
+        intent.putExtra(ChatActivity.INTENT_EXTRA_DEST, sender);
 
         PendingIntent contentIntent = PendingIntent.getActivity(context, text.hashCode(), intent, 0);
 
