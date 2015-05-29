@@ -60,7 +60,7 @@ Specify the required permissions.
 <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 <!-- Voice/Video calling, photo/video messages - To access camera services -->
 <uses-permission android:name="android.permission.CAMERA" />
-<!-- Photo/Video messages - Allows an application to read from external storage. -->
+<!-- Photo/Video messages - Allows an application to write to external storage. -->
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 <!-- Location messages - To access location services -->
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -68,10 +68,10 @@ Specify the required permissions.
 
 <!-- More GCM push notifications -->
 <permission
-    android:name="com.bit6.permission.C2D_MESSAGE"
+    android:name="your.package.name.permission.C2D_MESSAGE"
     android:protectionLevel="signature" />
 
-<uses-permission android:name="com.bit6.permission.C2D_MESSAGE" />
+<uses-permission android:name="your.package.name.permission.C2D_MESSAGE" />
 <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
 ```
@@ -81,7 +81,7 @@ Modify `<application>` element. `your.package.name` is the package name for your
 ```xml
 <application>
   <!-- Required for applications which use Google Play Services. -->
-  <meta-data 
+  <meta-data
       android:name="com.google.android.gms.version"
       android:value="@integer/google_play_services_version" />
 
@@ -97,7 +97,7 @@ Modify `<application>` element. `your.package.name` is the package name for your
       android:permission="com.google.android.c2dm.permission.SEND" >
       <intent-filter>
           <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-          <category android:name="com.bit6" />
+          <category android:name="your.package.name" />
       </intent-filter>
   </receiver>
 

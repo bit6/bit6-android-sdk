@@ -27,7 +27,7 @@ notificationClient.sendNotification(to, "mytype");
 
 ### Receiving Notifications
 
-Get notified when another user is typing a message, or on any other real-time notification.
+Get notified when connection is established or closed, another user is typing a message, or on any other real-time notification.
 
 ```java
 notificationClient.addListener(new NotificationClient.Listener() {
@@ -36,6 +36,9 @@ notificationClient.addListener(new NotificationClient.Listener() {
     }
     public void onNotificationReceived(String from, String type, JSONObject data) {
         Log.e(TAG, "Notification: " + data.toString());
+    }
+    public void onConnectedChanged(boolean isConnected) {
+        Log.e(TAG, "RT is connected "+isConnected);
     }
 });
 ```

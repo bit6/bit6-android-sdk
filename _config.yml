@@ -1,6 +1,6 @@
 ---
 title: 'Bit6 Android SDK'
-version: '0.9.1'
+version: '0.9.2'
 exclude: ['README.markdown']
 permalink: ':title'
 highlighter: 'pygments'

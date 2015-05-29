@@ -13,6 +13,12 @@ The session capabilities are accessed via `SessionClient`.
 SessionClient sessionClient = bit6.getSessionClient();
 ```
 
+### Authenticate as anonymous user
+
+```java
+sessionClient.anonymous(resultHandler);
+```
+
 ### Check if the user is authenticated
 
 ```java
