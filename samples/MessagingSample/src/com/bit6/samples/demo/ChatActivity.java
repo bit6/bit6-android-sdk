@@ -218,6 +218,12 @@ public class ChatActivity extends Activity implements NotificationClient.Listene
         // TODO Auto-generated method stub
     }
 
+    @Override
+    public void onConnectedChanged(boolean isConnected) {
+        // TODO Auto-generated method stub
+    }
+
+    
     // Start voice or video call
     private void startCall(boolean isVideo) {
         RtcDialog dialog = bit6.getCallClient().startCall(other, isVideo);

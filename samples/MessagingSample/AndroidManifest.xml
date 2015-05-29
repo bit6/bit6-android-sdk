@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bit6.samples.demo"
     android:versionCode="9"
-    android:versionName="0.9.1" >
+    android:versionName="0.9.2" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -34,10 +34,10 @@
            where PACKAGE is the application's package name.
     -->
     <permission
-        android:name="com.bit6.permission.C2D_MESSAGE"
+        android:name="com.bit6.samples.demo.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.bit6.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.bit6.samples.demo.permission.C2D_MESSAGE" />
 
     <!-- This app has permission to register and receive data message. -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -105,7 +105,7 @@
             <intent-filter>
                 <!-- Receives the actual messages. -->
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.bit6" />
+                <category android:name="com.bit6.samples.demo" />
             </intent-filter>
         </receiver>
         <receiver
