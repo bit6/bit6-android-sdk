@@ -32,5 +32,12 @@
         android:layout_height="48dp"
         android:background="@drawable/ic_action_return_from_full_screen"
         android:contentDescription="@string/hangup_call" />
+    
+    <ImageButton
+        android:id="@+id/add_person"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/ic_action_add_person"
+        android:contentDescription="@string/hangup_call" />
 
 </LinearLayout>

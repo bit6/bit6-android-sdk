@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:amazon="http://schemas.amazon.com/apk/res/android"
     package="com.bit6.samples.demo"
     android:versionCode="9"
     android:versionName="0.9.2" >
@@ -27,6 +28,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <!-- GCM Push Messaging -->
     <!--
      Creates a custom permission so only this app can receive its messages.
 
@@ -41,6 +43,19 @@
 
     <!-- This app has permission to register and receive data message. -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    
+    <!-- ADM Push Messaging -->
+    <!-- This permission ensures that no other application can intercept your ADM messages. It
+       should have the form packagename.permission.RECIEVE_ADM_MESSAGE where packagename is the
+       name defined in the "package" property of the manifest tag. -->
+    <permission
+        android:name="com.bit6.samples.demo.permission.RECEIVE_ADM_MESSAGE"
+        android:protectionLevel="signature"/>
+
+    <!-- Required permissions -->
+    <uses-permission android:name="com.bit6.samples.demo.permission.RECEIVE_ADM_MESSAGE"/>
+    <uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE"/>
+
 
     <application
         android:name=".App"
@@ -79,6 +94,7 @@
             android:name="com.bit6.samples.demo.CallActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <activity
@@ -93,21 +109,6 @@
             android:authorities="com.bit6.samples.demo.provider"
             android:exported="false" />
 
-        <!--
-          WakefulBroadcastReceiver that will receive intents from GCM
-          services and hand them to the custom IntentService.
-          The com.google.android.c2dm.permission.SEND permission is necessary
-          so only GCM services can send data messages for the app.
-        -->
-        <receiver
-            android:name="com.bit6.sdk.gcm.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <!-- Receives the actual messages. -->
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.bit6.samples.demo" />
-            </intent-filter>
-        </receiver>
         <receiver
             android:name=".IncomingCallReceiver"
             android:enabled="true" >
@@ -125,7 +126,35 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.bit6.sdk.gcm.GcmIntentService" />
+        <service android:name="com.bit6.sdk.push.PushIntentService" />
+
+        <!-- GCM push support -->
+        <receiver
+            android:name="com.bit6.sdk.push.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.bit6.samples.demo" />
+            </intent-filter>
+        </receiver>
+        
+        <!-- ADM push support -->
+        <service
+            android:name="com.bit6.sdk.push.AdmMessageHandler"
+            android:exported="false" />
+
+        <amazon:enable-feature android:name="com.amazon.device.messaging"
+            android:required="false" />
+
+        <receiver android:name="com.bit6.sdk.push.AdmMessageHandler$Receiver"
+            android:permission="com.amazon.device.messaging.permission.SEND">
+            <intent-filter>
+               <action android:name="com.amazon.device.messaging.intent.REGISTRATION" />
+               <action android:name="com.amazon.device.messaging.intent.RECEIVE" />
+               <category android:name="com.bit6.samples.demo"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
