@@ -97,3 +97,18 @@ public void onStateChanged(RtcDialog d, int state) {
 dialog.launchInCallActivity(this);
 ```
 
+### End Calls
+
+To end all ongoing calls:
+
+```java
+callClient.hangupAll();
+```
+
+To end a specific call:
+
+```java
+dialog.hangup()
+```
+
+

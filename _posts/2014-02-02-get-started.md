@@ -93,7 +93,7 @@ Modify `<application>` element. `your.package.name` is the package name for your
 
   <!-- Bit6 receives GCM push notifications -->
   <receiver
-      android:name="com.bit6.sdk.gcm.GcmBroadcastReceiver"
+      android:name="com.bit6.sdk.push.GcmBroadcastReceiver"
       android:permission="com.google.android.c2dm.permission.SEND" >
       <intent-filter>
           <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -102,7 +102,7 @@ Modify `<application>` element. `your.package.name` is the package name for your
   </receiver>
 
   <!-- Bit6 handles GCM push notifications -->
-  <service android:name="com.bit6.sdk.gcm.GcmIntentService" />
+  <service android:name="com.bit6.sdk.push.PushIntentService" />
 
   <!-- Your custom receiver for incoming calls -->
   <receiver android:name=".IncomingCallReceiver" android:enabled="true">
@@ -119,5 +119,42 @@ Modify `<application>` element. `your.package.name` is the package name for your
   </receiver>
 
 </application>
+```
+
+To support push notifications for Amazon devices
+
+Add `xmlns:amazon="http://schemas.amazon.com/apk/res/android"` into `<manifest>` element.
+
+Specify the required permissions. 
+
+```xml
+<!-- ADM Push Messaging -->
+<permission
+    android:name="your.package.name.permission.RECEIVE_ADM_MESSAGE"
+    android:protectionLevel="signature"/>
+
+<uses-permission android:name="your.package.name.permission.RECEIVE_ADM_MESSAGE"/>
+<uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE"/>
+```
+
+Modify `<application>` element.
+
+```xml
+<!-- ADM push support -->
+<service
+    android:name="com.bit6.sdk.push.AdmMessageHandler"
+    android:exported="false" />
+<amazon:enable-feature android:name="com.amazon.device.messaging"
+    android:required="false" />
+
+<!-- Bit6 receives ADM push notifications -->
+<receiver android:name="com.bit6.sdk.push.AdmMessageHandler$Receiver"
+    android:permission="com.amazon.device.messaging.permission.SEND">
+    <intent-filter>
+        <action android:name="com.amazon.device.messaging.intent.REGISTRATION" />
+        <action android:name="com.amazon.device.messaging.intent.RECEIVE" />
+            <category android:name="your.package.name"/>
+    </intent-filter>
+</receiver>
 ```
 
