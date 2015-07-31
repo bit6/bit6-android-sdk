@@ -85,6 +85,7 @@ public class ChatsActivity extends Activity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 Cursor c = (Cursor) parent.getItemAtPosition(position);
                 String convId = c.getString(c.getColumnIndex(Contract.Conversations.ID));
                 String conv_id = c.getString(c.getColumnIndex(Contract.Conversations._ID));
@@ -202,6 +203,8 @@ public class ChatsActivity extends Activity {
 
         final AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
+     // Show the dialog
+        dialog.show();
 
         Button positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
         positive.setOnClickListener(new OnClickListener() {
@@ -224,8 +227,7 @@ public class ChatsActivity extends Activity {
             }
         });
 
-        // Show the dialog
-        dialog.show();
+        
     }
 
     // Scroll to the start of list

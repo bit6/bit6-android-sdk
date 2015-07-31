@@ -37,6 +37,7 @@ import com.bit6.samples.demo.imagecache.ImageCache;
 import com.bit6.samples.demo.imagecache.ImageFetcher;
 import com.bit6.sdk.Address;
 import com.bit6.sdk.Bit6;
+import com.bit6.sdk.Group;
 import com.bit6.sdk.Message;
 import com.bit6.sdk.MessageStatusListener;
 import com.bit6.sdk.NotificationClient;
@@ -131,6 +132,11 @@ public class ChatActivity extends Activity implements NotificationClient.Listene
         bit6.getNotificationClient().addListener(this);
 
         onNewIntent(getIntent());
+        Group g = Group.newGroup();
+        g.setPermission(Group.VIEW, Group.ROLE_ALL);
+        g.setPermission(Group.MEM_LIST, Group.ROLE_ADMIN);
+        g.setPermission(Group.EDIT, Group.ROLE_USER);
+        bit6.createGroup(g, ResultHandler.EMPTY);
     }
 
     @Override
