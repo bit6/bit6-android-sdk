@@ -9,7 +9,7 @@ Bit6 is a real-time, cloud-based communications-as-a-service platform that allow
 * [API Reference](https://bit6.github.io/bit6-android-sdk/api/)
 
 ### Samples
-The source code for the demo apps is included in the [samples](https://github.com/bit6/bit6-android-sdk/tree/master/samples) folder of this repo.
+The source code for the demo apps is available at the [bit6-android-samples](https://github.com/bit6/bit6-android-samples/) repo.
 
 ### Platforms
-Bit6 SDKs are available for: [iOS](https://github.com/bit6/bit6-ios-sdk), [Android](https://github.com/bit6/bit6-android-sdk) and [JavaScript](https://github.com/bit6/bit6-js-sdk).
+Bit6 SDKs are available for: [iOS](https://github.com/bit6/bit6-ios-sdk), [Android](https://github.com/bit6/bit6-android-sdk), [JavaScript](https://github.com/bit6/bit6-js-sdk) and [Cordova](https://github.com/bit6/bit6-cordova).
