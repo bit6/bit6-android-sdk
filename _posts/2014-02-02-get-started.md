@@ -6,21 +6,28 @@ title: 'Getting Started'
 Go to [Dashboard](https://dashboard.bit6.com/) and get the API Key for your app.
 
 
-### Add Bit6 SDK to your Eclipse project
+### Add Bit6 SDK to your Android Studio project
 
-__Step 1.__ [Download](https://github.com/bit6/bit6-android-sdk/) the Bit6 SDK
+__Step 1.__ Add Bit6 SDK Maven repository in your project `build.gradle` file
 
-__Step 2.__ Import `bit6-sdk` project into Eclipse
+```java
+allprojects {
+    repositories {
+        jcenter()
+        maven { url "https://raw.githubusercontent.com/bit6/bit6-android-sdk/master/releases/" }
+    }
+}
 
-__Step 3.__ Add `bit6-sdk` as a library into your project:
+```
 
-  * right click on your project
-  * select Properties -> Android
-  * click 'Add...'
-  * select bit6-sdk and click OK
+__Step 2.__ Add Bit6 SDK dependency in your module `build.gradle` dependencies
 
-<img class="shot" src="images/project_properties.png"/>
+```java
+dependencies {
+    compile "com.bit6.sdk:bit6-sdk:0.9.4"
+}
 
+```
 
 ### Setup Application class
 
@@ -125,7 +132,7 @@ To support push notifications for Amazon devices
 
 Add `xmlns:amazon="http://schemas.amazon.com/apk/res/android"` into `<manifest>` element.
 
-Specify the required permissions. 
+Specify the required permissions.
 
 ```xml
 <!-- ADM Push Messaging -->
