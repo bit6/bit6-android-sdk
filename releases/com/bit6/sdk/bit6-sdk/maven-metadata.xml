@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.bit6.sdk</groupId>
+  <artifactId>bit6-sdk</artifactId>
+  <version>0.9.4</version>
+  <versioning>
+    <versions>
+      <version>0.9.4</version>
+    </versions>
+    <lastUpdated>20150828155612</lastUpdated>
+  </versioning>
+</metadata>
