@@ -24,7 +24,7 @@ __Step 2.__ Add Bit6 SDK dependency in your module `build.gradle` dependencies
 
 ```java
 dependencies {
-    compile "com.bit6.sdk:bit6-sdk:0.9.4"
+    compile "com.bit6.sdk:bit6-sdk:{{site.version}}"
 }
 
 ```
@@ -94,7 +94,7 @@ Modify `<application>` element. `your.package.name` is the package name for your
 
   <!-- Bit6 Content Provider -->
   <provider
-      android:name="com.bit6.sdk.Bit6ContentProvider"
+      android:name="com.bit6.sdk.db.Bit6ContentProvider"
       android:authorities="your.package.name"
       android:exported="false" />
 
