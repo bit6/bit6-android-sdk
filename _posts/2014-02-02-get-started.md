@@ -2,56 +2,59 @@
 title: 'Getting Started'
 ---
 
-### Get Bit6 API Key
+### 1. Get Bit6 API Key
 Go to [Dashboard](https://dashboard.bit6.com/) and get the API Key for your app.
 
 
-### Add Bit6 SDK to your Android Studio project
+### 2. Add Bit6 SDK to your Android Studio project
 
-__Step 1.__ Add Bit6 SDK Maven repository in your project `build.gradle` file
+Add Bit6 SDK Maven repository in your project `build.gradle` file
 
 ```java
 allprojects {
     repositories {
         jcenter()
-        maven { url "https://raw.githubusercontent.com/bit6/bit6-android-sdk/master/releases/" }
+            maven { url "https://raw.githubusercontent.com/bit6/bit6-android-sdk/master/releases/" }
     }
 }
-
 ```
 
-__Step 2.__ Add Bit6 SDK dependency in your module `build.gradle` dependencies
+Add Bit6 SDK dependency in your module `build.gradle`. Bit6 UI Library is an optional module with common UI components for handling incoming and ongoing calls, message lists etc.
 
 ```java
 dependencies {
+    // Required Bit6 SDK module
     compile "com.bit6.sdk:bit6-sdk:{{site.version}}"
+    // Optional Bit6 UI components
+    // compile "com.bit6.sdk:bit6-ui:{{site.version}}"
 }
-
 ```
 
-### Setup Application class
+### 3. Setup Application class
 
 ```java
 import com.bit6.sdk.Bit6;
 import com.bit6.sdk.LifecycleHelper;
 
 public class App extends Application {
-  // Override onCreate method to init the SDK
-  public void onCreate() {
-    super.onCreate();
-    // Initialize Bit6 SDK
-    Bit6 bit6 = Bit6.getInstance();
-    bit6.init(getApplicationContext(), "MY_API_KEY");
-    // Bit6 will be notified about lifecycle events for app activities
-    registerActivityLifecycleCallbacks(new LifecycleHelper(bit6));
-  }
+    // Override onCreate method to init the SDK
+    public void onCreate() {
+        super.onCreate();
+        // Initialize Bit6 SDK
+        Bit6 bit6 = Bit6.getInstance();
+        bit6.init(getApplicationContext(), "MY_API_KEY");
+        // Bit6 will be notified about lifecycle events for app activities
+        registerActivityLifecycleCallbacks(new LifecycleHelper(bit6));
+    }
 }
-
 ```
 
-### Manifest.xml
+### 4. Manifest.xml
 
-Specify the required permissions.
+Assuming `your.package.name` is the package name for your application,
+you need to do the following:
+
+Specify the required permissions:
 
 ```xml
 <!-- Internet access - Allows applications to connect to the network -->
@@ -73,7 +76,7 @@ Specify the required permissions.
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-<!-- More GCM push notifications -->
+<!-- GCM push notifications -->
 <permission
     android:name="your.package.name.permission.C2D_MESSAGE"
     android:protectionLevel="signature" />
@@ -83,7 +86,7 @@ Specify the required permissions.
 
 ```
 
-Modify `<application>` element. `your.package.name` is the package name for your application.
+Modify `<application>` element:
 
 ```xml
 <application>
@@ -114,37 +117,60 @@ Modify `<application>` element. `your.package.name` is the package name for your
   <!-- Your custom receiver for incoming calls -->
   <receiver android:name=".IncomingCallReceiver" android:enabled="true">
       <intent-filter>
-          <action android:name="your.package.name.BIT6_INCOMING_CALL"></action>
+          <action android:name="your.package.name.BIT6_INCOMING_CALL" />
       </intent-filter>
   </receiver>
 
-  <!-- Your custom reciever for incoming messages -->
+  <!-- Your custom receiver for incoming messages -->
   <receiver android:name=".IncomingMessageReceiver" android:enabled="true">
       <intent-filter>
-          <action android:name="your.package.name.BIT6_INCOMING_MESSAGE"></action>
+          <action android:name="your.package.name.BIT6_INCOMING_MESSAGE" />
       </intent-filter>
   </receiver>
 
 </application>
 ```
 
-To support push notifications for Amazon devices
+### 5. Configure GCM push notifications
+
+Get GCM Project Number and Server Key:
+
+  - Go to Google [Dev Console](https://console.developers.google.com)
+  - Select your project, note the Project Number
+  - Click on API Manager or Use Google APIs)
+  - In Overview, click on 'Cloud Messaging for Android', make sure it is enabled
+  - Click on 'Credentials' in the right column
+  - Click 'Add credentials' -> 'API key', then select 'Server Key'
+  - Specify any name, click 'Create'
+  - You will see the Server Key to use for GCM
+
+Enter the Project Number and Server Key in Bit6 Dashboard:
+
+  - Select your app in the Dashboard
+  - Click Settings in the left menu, then go to Push Notifications tab.
+  - Enter Project Number and Server Key in the GCM section
+
+
+
+### 6. Enable ADM push notifications (optional)
+
+To support push notifications on Amazon devices you need to modify `Manifest.xml`
 
 Add `xmlns:amazon="http://schemas.amazon.com/apk/res/android"` into `<manifest>` element.
 
-Specify the required permissions.
+Specify the required permissions:
 
 ```xml
 <!-- ADM Push Messaging -->
 <permission
     android:name="your.package.name.permission.RECEIVE_ADM_MESSAGE"
-    android:protectionLevel="signature"/>
+    android:protectionLevel="signature" />
 
-<uses-permission android:name="your.package.name.permission.RECEIVE_ADM_MESSAGE"/>
-<uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE"/>
+<uses-permission android:name="your.package.name.permission.RECEIVE_ADM_MESSAGE" />
+<uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE" />
 ```
 
-Modify `<application>` element.
+Modify `<application>` element:
 
 ```xml
 <!-- ADM push support -->
@@ -160,8 +186,7 @@ Modify `<application>` element.
     <intent-filter>
         <action android:name="com.amazon.device.messaging.intent.REGISTRATION" />
         <action android:name="com.amazon.device.messaging.intent.RECEIVE" />
-            <category android:name="your.package.name"/>
+        <category android:name="your.package.name" />
     </intent-filter>
 </receiver>
 ```
-
