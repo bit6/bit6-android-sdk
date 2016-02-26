@@ -136,18 +136,19 @@ Modify `<application>` element:
 Get GCM Project Number and Server Key:
 
   - Go to Google [Dev Console](https://console.developers.google.com)
-  - Select your project, note the Project Number
-  - Click on API Manager or Use Google APIs)
-  - In Overview, click on 'Cloud Messaging for Android', make sure it is enabled
-  - Click on 'Credentials' in the right column
-  - Click 'Add credentials' -> 'API key', then select 'Server Key'
+  - Select your project, note the Project Number (digits only!)
+  - Click on 'API Manager' or 'Use Google APIs'
+  - In the left column select 'Overview'
+  - In the right column click on 'Cloud Messaging for Android', make sure it is enabled
+  - In the left column select 'Credentials'
+  - Click 'Create credentials', select 'API key', click 'Server Key'
   - Specify any name, click 'Create'
   - You will see the Server Key to use for GCM
 
 Enter the Project Number and Server Key in Bit6 Dashboard:
 
   - Select your app in the Dashboard
-  - Click Settings in the left menu, then go to Push Notifications tab.
+  - Click 'Settings' in the left menu, then go to 'Push Notifications' tab.
   - Enter Project Number and Server Key in the GCM section
 
 
