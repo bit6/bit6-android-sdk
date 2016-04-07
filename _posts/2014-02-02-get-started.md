@@ -135,7 +135,7 @@ Modify `<application>` element:
 
 Get GCM Project Number and Server Key:
 
-  - Go to Google [Dev Console](https://console.developers.google.com)
+  - Go to Google [Dev Console](https://console.cloud.google.com)
   - Select your project, note the Project Number (digits only!)
   - Click on 'API Manager' or 'Use Google APIs'
   - In the left column select 'Overview'
