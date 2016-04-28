@@ -5,8 +5,10 @@ Bit6 Android SDK
 Bit6 is a real-time, cloud-based communications-as-a-service platform that allows mobile and web application developers to quickly and easily add voice/video calling, texting, and multimedia messaging capabilities into their apps.
 
 ### Documentation
-* [Getting Started](https://bit6.github.io/bit6-android-sdk/)
-* [API Reference](https://bit6.github.io/bit6-android-sdk/api/)
+* [Quick Start](http://docs.bit6.com/start/android-studio/)
+* [Developer Guide](http://docs.bit6.com/guides/android/)
+* [UI Components](http://docs.bit6.com/guides/android-ui/)
+* [API Reference](http://docs.bit6.com/api/android/)
 
 ### Samples
 The source code for the demo apps is available at the [bit6-android-samples](https://github.com/bit6/bit6-android-samples/) repo.
