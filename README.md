@@ -6,7 +6,7 @@ Bit6 is a real-time, cloud-based communications-as-a-service platform that allow
 
 ### Documentation
 * [Quick Start](http://docs.bit6.com/start/android-studio/)
-* [Developer Guide](http://docs.bit6.com/guides/android/)
+* [Developer Guide](http://docs.bit6.com/guides/android-intro/)
 * [UI Components](http://docs.bit6.com/guides/android-ui/)
 * [API Reference](http://docs.bit6.com/api/android/)
 
