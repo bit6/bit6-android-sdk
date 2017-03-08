@@ -3,14 +3,15 @@
   <groupId>com.bit6.sdk</groupId>
   <artifactId>bit6-sdk</artifactId>
   <versioning>
-    <release>0.9.8</release>
+    <release>0.10.0</release>
     <versions>
       <version>0.9.4</version>
       <version>0.9.5</version>
       <version>0.9.6</version>
       <version>0.9.7</version>
       <version>0.9.8</version>
+      <version>0.10.0</version>
     </versions>
-    <lastUpdated>20161005132942</lastUpdated>
+    <lastUpdated>20170308084233</lastUpdated>
   </versioning>
 </metadata>
